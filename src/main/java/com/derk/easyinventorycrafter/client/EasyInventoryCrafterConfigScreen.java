@@ -17,6 +17,7 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
 	private ButtonWidget highlightOpacityLabelButton;
 	private ButtonWidget autoRefreshLabelButton;
 	private ButtonWidget distanceLabelLabelButton;
+	private ButtonWidget snapAimLabelButton;
 	private ButtonWidget panelDefaultLabelButton;
 	private TextFieldWidget highlightColorField;
 	private TextFieldWidget highlightDurationField;
@@ -25,8 +26,10 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
 	private TextFieldWidget autoRefreshField;
 	private ButtonWidget highlightColorPickerButton;
 	private boolean showDistanceLabel;
+	private boolean snapAimToChest;
 	private boolean nearbyPanelOpenByDefault;
 	private ButtonWidget showDistanceLabelButton;
+	private ButtonWidget snapAimButton;
 	private ButtonWidget panelDefaultButton;
 	private Text errorText = Text.empty();
 
@@ -39,6 +42,7 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
 	protected void init() {
 		ConfigData config = EasyInventoryCrafterConfig.snapshot();
 		this.showDistanceLabel = config.showDistanceLabel;
+		this.snapAimToChest = config.snapAimToChest;
 		this.nearbyPanelOpenByDefault = config.nearbyPanelOpenByDefault;
 
 		int centerX = this.width / 2;
@@ -55,7 +59,8 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
 		this.highlightOpacityLabelButton = this.derk$createLabelButton(labelButtonX, startY + rowHeight * 3, labelButtonWidth, "Highlight Opacity");
 		this.autoRefreshLabelButton = this.derk$createLabelButton(labelButtonX, startY + rowHeight * 4, labelButtonWidth, "Auto Refresh");
 		this.distanceLabelLabelButton = this.derk$createLabelButton(labelButtonX, startY + rowHeight * 5, labelButtonWidth, "Distance Label");
-		this.panelDefaultLabelButton = this.derk$createLabelButton(labelButtonX, startY + rowHeight * 6, labelButtonWidth, "Panel Default");
+		this.snapAimLabelButton = this.derk$createLabelButton(labelButtonX, startY + rowHeight * 6, labelButtonWidth, "Snap Aim To Chest");
+		this.panelDefaultLabelButton = this.derk$createLabelButton(labelButtonX, startY + rowHeight * 7, labelButtonWidth, "Panel Default");
 
 		this.highlightColorField = this.derk$createField(fieldX, startY, fieldWidth, String.format(Locale.ROOT, "#%06X", config.highlightColor));
 		this.highlightColorField.setPlaceholder(Text.of("#RRGGBB"));
@@ -76,10 +81,15 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
 			button.setMessage(this.derk$getDistanceLabelText());
 		}).dimensions(fieldX, startY + rowHeight * 5, 96, 20).build());
 
+		this.snapAimButton = this.addDrawableChild(ButtonWidget.builder(this.derk$getSnapAimText(), button -> {
+			this.snapAimToChest = !this.snapAimToChest;
+			button.setMessage(this.derk$getSnapAimText());
+		}).dimensions(fieldX, startY + rowHeight * 6, 96, 20).build());
+
 		this.panelDefaultButton = this.addDrawableChild(ButtonWidget.builder(this.derk$getPanelDefaultText(), button -> {
 			this.nearbyPanelOpenByDefault = !this.nearbyPanelOpenByDefault;
 			button.setMessage(this.derk$getPanelDefaultText());
-		}).dimensions(fieldX, startY + rowHeight * 6, 96, 20).build());
+		}).dimensions(fieldX, startY + rowHeight * 7, 96, 20).build());
 
 		this.addDrawableChild(ButtonWidget.builder(Text.of("Reset Defaults"), button -> this.derk$resetToDefaults())
 				.dimensions(centerX - 155, this.height - 52, 100, 20)
@@ -104,7 +114,7 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
 		int panelX = centerX - 190;
 		int panelY = 34;
 		int panelWidth = 380;
-		int panelHeight = 292;
+		int panelHeight = 326;
 		int labelX = panelX + 18;
 		int fieldX = centerX + 56;
 		int startY = 62;
@@ -124,7 +134,8 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
 		this.derk$drawRowDescription(context, labelX, startY + rowHeight * 3, "Opacity of the filled highlight overlay.");
 		this.derk$drawRowDescription(context, labelX, startY + rowHeight * 4, "How often the nearby list refreshes while open.");
 		this.derk$drawRowDescription(context, labelX, startY + rowHeight * 5, "Show the floating distance text above highlights.");
-		this.derk$drawRowDescription(context, labelX, startY + rowHeight * 6, "Whether the nearby panel starts opened.");
+		this.derk$drawRowDescription(context, labelX, startY + rowHeight * 6, "Rotate the camera toward the nearest matching chest on click.");
+		this.derk$drawRowDescription(context, labelX, startY + rowHeight * 7, "Whether the nearby panel starts opened.");
 		this.derk$drawColorPreview(context, fieldX + 172, startY + 2);
 	}
 
@@ -171,6 +182,10 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
 		return Text.of(this.nearbyPanelOpenByDefault ? "Open" : "Closed");
 	}
 
+	private Text derk$getSnapAimText() {
+		return Text.of(this.snapAimToChest ? "On" : "Off");
+	}
+
 	private void derk$resetToDefaults() {
 		ConfigData defaults = ConfigData.defaults();
 		this.highlightColorField.setText(String.format(Locale.ROOT, "#%06X", defaults.highlightColor));
@@ -179,8 +194,10 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
 		this.highlightOpacityField.setText(Integer.toString(defaults.highlightOpacityPercent));
 		this.autoRefreshField.setText(this.derk$formatSeconds(defaults.autoRefreshTicks));
 		this.showDistanceLabel = defaults.showDistanceLabel;
+		this.snapAimToChest = defaults.snapAimToChest;
 		this.nearbyPanelOpenByDefault = defaults.nearbyPanelOpenByDefault;
 		this.showDistanceLabelButton.setMessage(this.derk$getDistanceLabelText());
+		this.snapAimButton.setMessage(this.derk$getSnapAimText());
 		this.panelDefaultButton.setMessage(this.derk$getPanelDefaultText());
 		this.errorText = Text.empty();
 	}
@@ -194,6 +211,7 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
 			updated.highlightOpacityPercent = this.derk$parseInt(this.highlightOpacityField.getText(), 5, 100, "Highlight opacity");
 			updated.autoRefreshTicks = this.derk$parseSecondsToTicks(this.autoRefreshField.getText(), 0.25, 30.0);
 			updated.showDistanceLabel = this.showDistanceLabel;
+			updated.snapAimToChest = this.snapAimToChest;
 			updated.nearbyPanelOpenByDefault = this.nearbyPanelOpenByDefault;
 			EasyInventoryCrafterConfig.update(updated);
 			NearbyItemsClientState.requestUpdate();

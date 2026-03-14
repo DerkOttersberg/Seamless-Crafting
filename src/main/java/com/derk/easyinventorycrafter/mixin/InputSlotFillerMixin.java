@@ -21,6 +21,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(InputSlotFiller.class)
@@ -119,6 +120,14 @@ public abstract class InputSlotFillerMixin {
 		cir.setReturnValue(remaining == targetCount ? -1 : remaining);
 	}
 
+	@Inject(method = "returnInputs", at = @At("HEAD"))
+	private void derk$returnNearbyInputsToOrigin(CallbackInfo ci) {
+		AbstractCraftingScreenHandler screenHandler = this.derk$resolveScreenHandler();
+		if (screenHandler instanceof NearbyCraftingAccess access) {
+			access.derk$prepareNearbyWithdrawalsForAutofill();
+		}
+	}
+
 	private int derk$countInInventories(List<Inventory> inventories, RegistryEntry<Item> item, ItemStack slotStack) {
 		int total = 0;
 		for (Inventory inv : inventories) {
@@ -195,6 +204,10 @@ public abstract class InputSlotFillerMixin {
 
 	@Nullable
 	private AbstractCraftingScreenHandler derk$resolveScreenHandler() {
+		if (this.handler instanceof AbstractCraftingScreenHandler screenHandler) {
+			return screenHandler;
+		}
+
 		Object handlerObj = this.handler;
 		if (handlerObj == null) {
 			return null;

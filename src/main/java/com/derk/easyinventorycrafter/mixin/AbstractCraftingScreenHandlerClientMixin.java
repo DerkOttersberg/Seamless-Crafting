@@ -5,6 +5,7 @@ import com.derk.easyinventorycrafter.client.NearbyItemsClientState;
 import java.util.List;
 import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.screen.AbstractCraftingScreenHandler;
+import net.minecraft.screen.PlayerScreenHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,6 +15,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class AbstractCraftingScreenHandlerClientMixin {
 	@Inject(method = "populateRecipeFinder", at = @At("TAIL"))
 	private void derk$addNearbyClientItems(RecipeFinder finder, CallbackInfo ci) {
+		if ((Object)this instanceof PlayerScreenHandler) {
+			return;
+		}
+
 		List<NearbyItemEntry> entries = NearbyItemsClientState.getEntries();
 		for (NearbyItemEntry entry : entries) {
 			if (entry.stack().isEmpty() || entry.count() <= 0) {

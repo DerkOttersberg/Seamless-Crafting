@@ -8,6 +8,7 @@ import java.util.List;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.CraftingScreenHandler;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jspecify.annotations.Nullable;
@@ -17,16 +18,12 @@ public final class NearbyItemsSync {
 	}
 
 	public static void sendNearbyItems(ServerPlayerEntity player) {
-		if (!(player.currentScreenHandler instanceof CraftingScreenHandler)) {
+		if (!(player.currentScreenHandler instanceof CraftingScreenHandler)
+				&& !(player.currentScreenHandler instanceof PlayerScreenHandler)) {
 			return;
 		}
 
-		ScreenHandlerContext context = getContext(player);
-		if (context == null) {
-			return;
-		}
-
-		WorldPos worldPos = NearbyInventoryScanner.getWorldPos(context);
+		WorldPos worldPos = getWorldPos(player);
 		if (worldPos == null) {
 			return;
 		}
@@ -50,12 +47,25 @@ public final class NearbyItemsSync {
 	}
 
 	@Nullable
-	public static List<net.minecraft.util.math.BlockPos> findHighlightPositions(ServerPlayerEntity player, ItemStack stack) {
+	private static WorldPos getWorldPos(ServerPlayerEntity player) {
 		ScreenHandlerContext context = getContext(player);
-		if (context == null) {
-			return null;
+		if (context != null) {
+			WorldPos worldPos = NearbyInventoryScanner.getWorldPos(context);
+			if (worldPos != null) {
+				return worldPos;
+			}
 		}
-		WorldPos worldPos = NearbyInventoryScanner.getWorldPos(context);
+
+		if (player.currentScreenHandler instanceof PlayerScreenHandler) {
+			return new WorldPos(player.getEntityWorld(), player.getBlockPos());
+		}
+
+		return null;
+	}
+
+	@Nullable
+	public static List<net.minecraft.util.math.BlockPos> findHighlightPositions(ServerPlayerEntity player, ItemStack stack) {
+		WorldPos worldPos = getWorldPos(player);
 		if (worldPos == null) {
 			return null;
 		}

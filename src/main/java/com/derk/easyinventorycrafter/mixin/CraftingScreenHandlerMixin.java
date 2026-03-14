@@ -40,6 +40,9 @@ public abstract class CraftingScreenHandlerMixin implements NearbyCraftingAccess
 	@Unique
 	private boolean derk$cancellingNearbyWithdrawals;
 
+	@Unique
+	private boolean derk$autofillingNearbyWithdrawals;
+
 	@Shadow
 	@Final
 	private ScreenHandlerContext context;
@@ -81,72 +84,13 @@ public abstract class CraftingScreenHandlerMixin implements NearbyCraftingAccess
 	}
 
 	@Override
+	public void derk$prepareNearbyWithdrawalsForAutofill() {
+		this.derk$returnNearbyWithdrawals(false);
+	}
+
+	@Override
 	public void derk$cancelNearbyWithdrawals() {
-		boolean changed = false;
-		this.derk$cancellingNearbyWithdrawals = true;
-		try {
-			while (true) {
-				this.derk$reconcileNearbyWithdrawals();
-				if (this.derk$pendingNearbyWithdrawals.isEmpty()) {
-					break;
-				}
-
-				List<Slot> inputSlots = this.getInputSlots();
-				boolean passChanged = false;
-				for (Iterator<PendingNearbyWithdrawal> iterator = this.derk$pendingNearbyWithdrawals.iterator(); iterator.hasNext(); ) {
-					PendingNearbyWithdrawal withdrawal = iterator.next();
-					if (withdrawal.craftingSlotIndex() < 0 || withdrawal.craftingSlotIndex() >= inputSlots.size()) {
-						iterator.remove();
-						continue;
-					}
-
-					Slot slot = inputSlots.get(withdrawal.craftingSlotIndex());
-					ItemStack slotStack = slot.getStack();
-					if (slotStack.isEmpty() || !ItemStack.areItemsAndComponentsEqual(slotStack, withdrawal.templateStack())) {
-						iterator.remove();
-						continue;
-					}
-
-					int removableCount = Math.min(withdrawal.remainingCount(), slotStack.getCount());
-					if (removableCount <= 0) {
-						iterator.remove();
-						continue;
-					}
-
-					ItemStack toReturn = withdrawal.templateStack().copyWithCount(removableCount);
-					int insertedCount = this.derk$insertBackIntoInventory(withdrawal.sourceInventory(), withdrawal.sourceSlot(), toReturn);
-					if (insertedCount <= 0) {
-						continue;
-					}
-
-					if (insertedCount == slotStack.getCount()) {
-						slot.setStackNoCallbacks(ItemStack.EMPTY);
-					} else {
-						slotStack.decrement(insertedCount);
-						slot.markDirty();
-					}
-
-					withdrawal.setRemainingCount(withdrawal.remainingCount() - insertedCount);
-					withdrawal.sourceInventory().markDirty();
-					passChanged = true;
-					changed = true;
-					if (withdrawal.remainingCount() <= 0) {
-						iterator.remove();
-					}
-				}
-
-				this.derk$cleanupSlotBaselines();
-				if (!passChanged) {
-					break;
-				}
-			}
-		} finally {
-			this.derk$cancellingNearbyWithdrawals = false;
-		}
-
-		if (changed) {
-			this.derk$refreshAfterNearbyTransfer();
-		}
+		this.derk$returnNearbyWithdrawals(true);
 	}
 
 	@Inject(method = "<init>(ILnet/minecraft/entity/player/PlayerInventory;Lnet/minecraft/screen/ScreenHandlerContext;)V", at = @At("TAIL"))
@@ -156,15 +100,22 @@ public abstract class CraftingScreenHandlerMixin implements NearbyCraftingAccess
 		}
 	}
 
+	@Inject(method = "onInputSlotFillStart", at = @At("HEAD"))
+	private void derk$markNearbyAutofillStart(CallbackInfo ci) {
+		this.derk$autofillingNearbyWithdrawals = true;
+	}
+
 	@Inject(method = "onContentChanged", at = @At("TAIL"))
 	private void derk$reconcileOnContentChanged(Inventory inventory, CallbackInfo ci) {
-		if (!this.derk$cancellingNearbyWithdrawals) {
+		if (!this.derk$cancellingNearbyWithdrawals && !this.derk$autofillingNearbyWithdrawals) {
 			this.derk$reconcileNearbyWithdrawals();
 		}
 	}
 
 	@Inject(method = "onInputSlotFillFinish", at = @At("TAIL"))
 	private void derk$refreshAfterFill(ServerWorld world, net.minecraft.recipe.RecipeEntry<net.minecraft.recipe.CraftingRecipe> recipe, CallbackInfo ci) {
+		this.derk$autofillingNearbyWithdrawals = false;
+		this.derk$reconcileNearbyWithdrawals();
 		if (this.player instanceof ServerPlayerEntity serverPlayer) {
 			NearbyItemsSync.sendNearbyItems(serverPlayer);
 		}
@@ -230,6 +181,75 @@ public abstract class CraftingScreenHandlerMixin implements NearbyCraftingAccess
 			this.derk$cleanupSlotBaselines();
 		} finally {
 			this.derk$reconcilingNearbyWithdrawals = false;
+		}
+	}
+
+	@Unique
+	private void derk$returnNearbyWithdrawals(boolean refreshAfter) {
+		boolean changed = false;
+		this.derk$cancellingNearbyWithdrawals = true;
+		try {
+			while (true) {
+				this.derk$reconcileNearbyWithdrawals();
+				if (this.derk$pendingNearbyWithdrawals.isEmpty()) {
+					break;
+				}
+
+				List<Slot> inputSlots = this.getInputSlots();
+				boolean passChanged = false;
+				for (Iterator<PendingNearbyWithdrawal> iterator = this.derk$pendingNearbyWithdrawals.iterator(); iterator.hasNext(); ) {
+					PendingNearbyWithdrawal withdrawal = iterator.next();
+					if (withdrawal.craftingSlotIndex() < 0 || withdrawal.craftingSlotIndex() >= inputSlots.size()) {
+						iterator.remove();
+						continue;
+					}
+
+					Slot slot = inputSlots.get(withdrawal.craftingSlotIndex());
+					ItemStack slotStack = slot.getStack();
+					if (slotStack.isEmpty() || !ItemStack.areItemsAndComponentsEqual(slotStack, withdrawal.templateStack())) {
+						iterator.remove();
+						continue;
+					}
+
+					int removableCount = Math.min(withdrawal.remainingCount(), slotStack.getCount());
+					if (removableCount <= 0) {
+						iterator.remove();
+						continue;
+					}
+
+					ItemStack toReturn = withdrawal.templateStack().copyWithCount(removableCount);
+					int insertedCount = this.derk$insertBackIntoInventory(withdrawal.sourceInventory(), withdrawal.sourceSlot(), toReturn);
+					if (insertedCount <= 0) {
+						continue;
+					}
+
+					if (insertedCount == slotStack.getCount()) {
+						slot.setStackNoCallbacks(ItemStack.EMPTY);
+					} else {
+						slotStack.decrement(insertedCount);
+						slot.markDirty();
+					}
+
+					withdrawal.setRemainingCount(withdrawal.remainingCount() - insertedCount);
+					withdrawal.sourceInventory().markDirty();
+					passChanged = true;
+					changed = true;
+					if (withdrawal.remainingCount() <= 0) {
+						iterator.remove();
+					}
+				}
+
+				this.derk$cleanupSlotBaselines();
+				if (!passChanged) {
+					break;
+				}
+			}
+		} finally {
+			this.derk$cancellingNearbyWithdrawals = false;
+		}
+
+		if (changed && refreshAfter) {
+			this.derk$refreshAfterNearbyTransfer();
 		}
 	}
 

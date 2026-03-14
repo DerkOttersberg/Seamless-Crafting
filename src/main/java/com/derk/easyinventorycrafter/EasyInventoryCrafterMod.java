@@ -10,6 +10,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.screen.CraftingScreenHandler;
+import net.minecraft.screen.PlayerScreenHandler;
 
 public class EasyInventoryCrafterMod implements ModInitializer {
 	public static final String MOD_ID = "derk_easy_inventory_crafter";
@@ -25,7 +26,8 @@ public class EasyInventoryCrafterMod implements ModInitializer {
 
 		ServerPlayNetworking.registerGlobalReceiver(RequestNearbyItemsPayload.ID, (payload, context) -> {
 			context.server().execute(() -> {
-				if (context.player().currentScreenHandler instanceof CraftingScreenHandler) {
+				if (context.player().currentScreenHandler instanceof CraftingScreenHandler
+						|| context.player().currentScreenHandler instanceof PlayerScreenHandler) {
 					NearbyItemsSync.sendNearbyItems(context.player());
 				}
 			});
@@ -33,7 +35,8 @@ public class EasyInventoryCrafterMod implements ModInitializer {
 
 		ServerPlayNetworking.registerGlobalReceiver(NearbyHighlightRequestPayload.ID, (payload, context) -> {
 			context.server().execute(() -> {
-				if (!(context.player().currentScreenHandler instanceof CraftingScreenHandler)) {
+				if (!(context.player().currentScreenHandler instanceof CraftingScreenHandler)
+						&& !(context.player().currentScreenHandler instanceof PlayerScreenHandler)) {
 					return;
 				}
 				java.util.List<net.minecraft.util.math.BlockPos> positions = NearbyItemsSync.findHighlightPositions(

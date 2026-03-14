@@ -13,6 +13,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.CraftingScreen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.RenderLayers;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -41,7 +42,8 @@ public class EasyInventoryCrafterClient implements ClientModInitializer {
 			@Override
 			public void onEndTick(MinecraftClient client) {
 				NearbyItemsClientState.tickHighlight(client);
-				if (!(client.currentScreen instanceof CraftingScreen)) {
+				if (!(client.currentScreen instanceof CraftingScreen)
+						&& !(client.currentScreen instanceof InventoryScreen)) {
 					tickCounter = 0;
 					return;
 				}

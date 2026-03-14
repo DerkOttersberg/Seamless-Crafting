@@ -71,6 +71,10 @@ public final class EasyInventoryCrafterConfig {
 		return data.showDistanceLabel;
 	}
 
+	public static boolean isSnapAimEnabled() {
+		return data.snapAimToChest;
+	}
+
 	public static boolean isNearbyPanelOpenByDefault() {
 		return data.nearbyPanelOpenByDefault;
 	}
@@ -103,6 +107,7 @@ public final class EasyInventoryCrafterConfig {
 		public int nearbyRadius;
 		public int highlightOpacityPercent;
 		public boolean showDistanceLabel;
+		public boolean snapAimToChest;
 		public boolean nearbyPanelOpenByDefault;
 		public int autoRefreshTicks;
 
@@ -113,6 +118,7 @@ public final class EasyInventoryCrafterConfig {
 			defaults.nearbyRadius = 16;
 			defaults.highlightOpacityPercent = 40;
 			defaults.showDistanceLabel = true;
+			defaults.snapAimToChest = true;
 			defaults.nearbyPanelOpenByDefault = true;
 			defaults.autoRefreshTicks = 20;
 			return defaults;
@@ -125,6 +131,7 @@ public final class EasyInventoryCrafterConfig {
 			copy.nearbyRadius = this.nearbyRadius;
 			copy.highlightOpacityPercent = this.highlightOpacityPercent;
 			copy.showDistanceLabel = this.showDistanceLabel;
+			copy.snapAimToChest = this.snapAimToChest;
 			copy.nearbyPanelOpenByDefault = this.nearbyPanelOpenByDefault;
 			copy.autoRefreshTicks = this.autoRefreshTicks;
 			return copy;

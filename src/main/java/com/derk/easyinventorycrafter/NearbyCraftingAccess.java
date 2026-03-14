@@ -12,5 +12,7 @@ public interface NearbyCraftingAccess {
 
 	void derk$recordNearbyWithdrawal(Inventory inventory, int sourceSlot, int craftingSlotIndex, ItemStack stack, int count, int baselineCount);
 
+	void derk$prepareNearbyWithdrawalsForAutofill();
+
 	void derk$cancelNearbyWithdrawals();
 }
