@@ -13,7 +13,6 @@
   ],
   "client": [
     "CraftingScreenMixin",
-    "RenderLayerMixin",
     "RecipeBookScreenMixin",
     "RecipeBookWidgetMixin"
   ],

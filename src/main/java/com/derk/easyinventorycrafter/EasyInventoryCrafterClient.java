@@ -1,7 +1,6 @@
 package com.derk.easyinventorycrafter;
 
 import com.derk.easyinventorycrafter.client.EasyHighlightRenderer;
-import com.derk.easyinventorycrafter.client.EasyHighlightRenderLayer;
 import com.derk.easyinventorycrafter.client.NearbyItemsClientState;
 import com.derk.easyinventorycrafter.net.NearbyItemsPayload;
 import com.derk.easyinventorycrafter.net.NearbyHighlightResponsePayload;
@@ -12,6 +11,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.CraftingScreen;
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -63,7 +63,7 @@ public class EasyInventoryCrafterClient implements ClientModInitializer {
 			var matrices = context.matrices();
 			matrices.push();
 
-			var consumer = context.consumers().getBuffer(EasyHighlightRenderLayer.outline());
+			var consumer = context.consumers().getBuffer(RenderLayers.lightning());
 
 			for (BlockPos pos : NearbyItemsClientState.getHighlightPositions()) {
 				BlockState state = client.world.getBlockState(pos);
@@ -78,7 +78,7 @@ public class EasyInventoryCrafterClient implements ClientModInitializer {
 
 				for (Box shapeBox : shape.getBoundingBoxes()) {
 					Box box = shapeBox.offset(pos).expand(0.002);
-					EasyHighlightRenderer.renderOutlineBox(matrices, consumer, cameraPos, box, alpha);
+					EasyHighlightRenderer.renderBox(matrices, consumer, cameraPos, box, alpha);
 				}
 			}
 
