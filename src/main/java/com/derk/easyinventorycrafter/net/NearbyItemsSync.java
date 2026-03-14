@@ -34,7 +34,7 @@ public final class NearbyItemsSync {
 		List<NearbyItemEntry> entries = NearbyInventoryScanner.collectItemCounts(
 				worldPos.world(),
 				worldPos.pos(),
-				NearbyInventoryScanner.DEFAULT_RADIUS
+				NearbyInventoryScanner.getConfiguredRadius()
 		);
 
 		ServerPlayNetworking.send(player, new NearbyItemsPayload(entries));
@@ -62,7 +62,7 @@ public final class NearbyItemsSync {
 		return NearbyInventoryScanner.findInventoryPositionsWithItem(
 				worldPos.world(),
 				worldPos.pos(),
-				NearbyInventoryScanner.DEFAULT_RADIUS,
+				NearbyInventoryScanner.getConfiguredRadius(),
 				stack.getItem()
 		);
 	}

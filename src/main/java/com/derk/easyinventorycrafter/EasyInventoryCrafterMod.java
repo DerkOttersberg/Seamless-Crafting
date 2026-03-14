@@ -16,6 +16,7 @@ public class EasyInventoryCrafterMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		EasyInventoryCrafterConfig.load();
 		PayloadTypeRegistry.playC2S().register(RequestNearbyItemsPayload.ID, RequestNearbyItemsPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(NearbyItemsPayload.ID, NearbyItemsPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(NearbyHighlightRequestPayload.ID, NearbyHighlightRequestPayload.CODEC);

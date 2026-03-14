@@ -60,7 +60,7 @@ public abstract class InputSlotFillerMixin {
 		List<Inventory> inventories = NearbyInventoryScanner.findNearbyInventories(
 				world,
 				worldPos.pos(),
-				NearbyInventoryScanner.DEFAULT_RADIUS
+				NearbyInventoryScanner.getConfiguredRadius()
 		);
 
 		int availableInNearby = derk$countInInventories(inventories, item, slotStack);

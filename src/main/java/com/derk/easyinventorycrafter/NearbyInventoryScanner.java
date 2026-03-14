@@ -28,6 +28,10 @@ public final class NearbyInventoryScanner {
 	private NearbyInventoryScanner() {
 	}
 
+	public static int getConfiguredRadius() {
+		return EasyInventoryCrafterConfig.getNearbyRadius();
+	}
+
 	public static List<Inventory> findNearbyInventories(World world, BlockPos center, int radius) {
 		Set<BlockEntity> seenEntities = new HashSet<>();
 		List<Inventory> inventories = new ArrayList<>();

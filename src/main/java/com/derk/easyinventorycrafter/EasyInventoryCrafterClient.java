@@ -25,12 +25,14 @@ import org.jspecify.annotations.Nullable;
 public class EasyInventoryCrafterClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
+		EasyInventoryCrafterConfig.load();
+
 		ClientPlayNetworking.registerGlobalReceiver(NearbyItemsPayload.ID, (payload, context) -> {
 			NearbyItemsClientState.applyPayload(payload);
 		});
 
 		ClientPlayNetworking.registerGlobalReceiver(NearbyHighlightResponsePayload.ID, (payload, context) -> {
-			NearbyItemsClientState.setHighlight(payload.positions(), 100);
+			NearbyItemsClientState.setHighlight(payload.positions(), EasyInventoryCrafterConfig.getHighlightDurationTicks());
 		});
 
 		ClientTickEvents.END_CLIENT_TICK.register(new ClientTickEvents.EndTick() {
@@ -45,7 +47,7 @@ public class EasyInventoryCrafterClient implements ClientModInitializer {
 				}
 
 				tickCounter++;
-				if (tickCounter >= 20) {
+				if (tickCounter >= EasyInventoryCrafterConfig.getAutoRefreshTicks()) {
 					NearbyItemsClientState.requestUpdate();
 					tickCounter = 0;
 				}
@@ -85,15 +87,17 @@ public class EasyInventoryCrafterClient implements ClientModInitializer {
 					}
 				}
 
-				EasyHighlightRenderer.renderDistanceLabel(
-					client,
-					matrices,
-					context.consumers(),
-					cameraPos,
-					fullBox,
-					player == null ? cameraPos : player.getEyePos(),
-					alpha
-				);
+				if (EasyInventoryCrafterConfig.isDistanceLabelEnabled()) {
+					EasyHighlightRenderer.renderDistanceLabel(
+						client,
+						matrices,
+						context.consumers(),
+						cameraPos,
+						fullBox,
+						player == null ? cameraPos : player.getEyePos(),
+						alpha
+					);
+				}
 			}
 
 			matrices.pop();

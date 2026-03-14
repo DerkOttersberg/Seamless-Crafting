@@ -47,7 +47,7 @@ public class AbstractCraftingScreenHandlerMixin implements AbstractCraftingScree
 		List<Inventory> inventories = NearbyInventoryScanner.findNearbyInventories(
 				worldPos.world(),
 				worldPos.pos(),
-				NearbyInventoryScanner.DEFAULT_RADIUS
+				NearbyInventoryScanner.getConfiguredRadius()
 		);
 		for (Inventory inventory : inventories) {
 			for (int i = 0; i < inventory.size(); i++) {

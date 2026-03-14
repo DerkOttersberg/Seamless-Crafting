@@ -1,5 +1,6 @@
 package com.derk.easyinventorycrafter.client;
 
+import com.derk.easyinventorycrafter.EasyInventoryCrafterConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumer;
@@ -12,14 +13,19 @@ import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 
 public final class EasyHighlightRenderer {
-    private static final float HIGHLIGHT_ALPHA = 0.4f;
     private static final int FULL_BRIGHT = 15728880;
 
     private EasyHighlightRenderer() {
     }
 
     public static void renderBox(MatrixStack matrices, VertexConsumer consumer, Vec3d camPos, Box box, float alpha) {
-        int color = ColorHelper.getArgb((int) (alpha * HIGHLIGHT_ALPHA * 255), 255, 215, 0);
+        int highlightColor = EasyInventoryCrafterConfig.getHighlightColor();
+        int color = ColorHelper.getArgb(
+                (int)(alpha * EasyInventoryCrafterConfig.getHighlightOpacity() * 255),
+                (highlightColor >> 16) & 0xFF,
+                (highlightColor >> 8) & 0xFF,
+                highlightColor & 0xFF
+        );
         renderFilledBox(matrices, consumer, camPos, box, color);
     }
 
@@ -50,7 +56,8 @@ public final class EasyHighlightRenderer {
 
         Matrix4f textMatrix = matrices.peek().getPositionMatrix();
         float x = -textRenderer.getWidth(label) / 2.0f;
-        int textColor = ColorHelper.getArgb((int) (alpha * 255), 255, 248, 210);
+        int highlightColor = EasyInventoryCrafterConfig.getHighlightColor();
+        int textColor = ColorHelper.getArgb((int) (alpha * 255), (highlightColor >> 16) & 0xFF, (highlightColor >> 8) & 0xFF, highlightColor & 0xFF);
         int backgroundColor = ColorHelper.getArgb((int) (alpha * 0.35f * 255), 0, 0, 0);
         textRenderer.draw(
             label,

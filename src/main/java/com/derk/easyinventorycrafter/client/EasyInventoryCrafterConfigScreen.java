@@ -1,0 +1,227 @@
+package com.derk.easyinventorycrafter.client;
+
+import com.derk.easyinventorycrafter.EasyInventoryCrafterConfig;
+import com.derk.easyinventorycrafter.EasyInventoryCrafterConfig.ConfigData;
+import java.util.Locale;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.text.Text;
+
+public class EasyInventoryCrafterConfigScreen extends Screen {
+	private final Screen parent;
+	private TextFieldWidget highlightColorField;
+	private TextFieldWidget highlightDurationField;
+	private TextFieldWidget nearbyRadiusField;
+	private TextFieldWidget highlightOpacityField;
+	private TextFieldWidget autoRefreshField;
+	private ButtonWidget highlightColorPickerButton;
+	private boolean showDistanceLabel;
+	private boolean nearbyPanelOpenByDefault;
+	private ButtonWidget showDistanceLabelButton;
+	private ButtonWidget panelDefaultButton;
+	private Text errorText = Text.empty();
+
+	public EasyInventoryCrafterConfigScreen(Screen parent) {
+		super(Text.of("Bluethooth Chest Settings"));
+		this.parent = parent;
+	}
+
+	@Override
+	protected void init() {
+		ConfigData config = EasyInventoryCrafterConfig.snapshot();
+		this.showDistanceLabel = config.showDistanceLabel;
+		this.nearbyPanelOpenByDefault = config.nearbyPanelOpenByDefault;
+
+		int centerX = this.width / 2;
+		int fieldX = centerX + 56;
+		int fieldWidth = 108;
+		int startY = 62;
+		int rowHeight = 34;
+
+		this.highlightColorField = this.derk$createField(fieldX, startY, fieldWidth, String.format(Locale.ROOT, "#%06X", config.highlightColor));
+		this.highlightColorField.setPlaceholder(Text.of("#RRGGBB"));
+		this.highlightColorPickerButton = this.addDrawableChild(ButtonWidget.builder(Text.of("Pick"), button -> this.client.setScreen(new EasyColorPickerScreen(this, this.derk$parseHexColor(this.highlightColorField.getText()), color -> this.highlightColorField.setText(String.format(Locale.ROOT, "#%06X", color)))))
+				.dimensions(fieldX + fieldWidth + 8, startY, 56, 20)
+				.build());
+		this.highlightDurationField = this.derk$createField(fieldX, startY + rowHeight, fieldWidth, this.derk$formatSeconds(config.highlightDurationTicks));
+		this.highlightDurationField.setPlaceholder(Text.of("Seconds"));
+		this.nearbyRadiusField = this.derk$createField(fieldX, startY + rowHeight * 2, fieldWidth, Integer.toString(config.nearbyRadius));
+		this.nearbyRadiusField.setPlaceholder(Text.of("Blocks"));
+		this.highlightOpacityField = this.derk$createField(fieldX, startY + rowHeight * 3, fieldWidth, Integer.toString(config.highlightOpacityPercent));
+		this.highlightOpacityField.setPlaceholder(Text.of("0-100"));
+		this.autoRefreshField = this.derk$createField(fieldX, startY + rowHeight * 4, fieldWidth, this.derk$formatSeconds(config.autoRefreshTicks));
+		this.autoRefreshField.setPlaceholder(Text.of("Seconds"));
+
+		this.showDistanceLabelButton = this.addDrawableChild(ButtonWidget.builder(this.derk$getDistanceLabelText(), button -> {
+			this.showDistanceLabel = !this.showDistanceLabel;
+			button.setMessage(this.derk$getDistanceLabelText());
+		}).dimensions(fieldX, startY + rowHeight * 5, 96, 20).build());
+
+		this.panelDefaultButton = this.addDrawableChild(ButtonWidget.builder(this.derk$getPanelDefaultText(), button -> {
+			this.nearbyPanelOpenByDefault = !this.nearbyPanelOpenByDefault;
+			button.setMessage(this.derk$getPanelDefaultText());
+		}).dimensions(fieldX, startY + rowHeight * 6, 96, 20).build());
+
+		this.addDrawableChild(ButtonWidget.builder(Text.of("Reset Defaults"), button -> this.derk$resetToDefaults())
+				.dimensions(centerX - 155, this.height - 52, 100, 20)
+				.build());
+		this.addDrawableChild(ButtonWidget.builder(Text.of("Cancel"), button -> this.close())
+				.dimensions(centerX - 50, this.height - 52, 100, 20)
+				.build());
+		this.addDrawableChild(ButtonWidget.builder(Text.of("Save"), button -> this.derk$save())
+				.dimensions(centerX + 55, this.height - 52, 100, 20)
+				.build());
+	}
+
+	@Override
+	public void close() {
+		this.client.setScreen(this.parent);
+	}
+
+	@Override
+	public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+		context.fill(0, 0, this.width, this.height, 0xCC101014);
+		int centerX = this.width / 2;
+		int panelX = centerX - 190;
+		int panelY = 34;
+		int panelWidth = 380;
+		int panelHeight = 292;
+		int labelX = panelX + 18;
+		int fieldX = centerX + 56;
+		int startY = 62;
+		int rowHeight = 34;
+
+		context.fill(panelX, panelY, panelX + panelWidth, panelY + panelHeight, 0xAA191C22);
+		this.derk$drawBorder(context, panelX, panelY, panelWidth, panelHeight, 0xFF404652);
+		context.drawCenteredTextWithShadow(this.textRenderer, this.title, centerX, 18, 0xFFFFFF);
+		if (!this.errorText.getString().isEmpty()) {
+			context.drawCenteredTextWithShadow(this.textRenderer, this.errorText, centerX, this.height - 78, 0xFF6B6B);
+		}
+
+		super.render(context, mouseX, mouseY, delta);
+		this.derk$drawRow(context, labelX, fieldX, startY, "Highlight Color", "Pick a color visually or type a hex code.");
+		this.derk$drawRow(context, labelX, fieldX, startY + rowHeight, "Highlight Duration", "How long chest highlights stay visible.");
+		this.derk$drawRow(context, labelX, fieldX, startY + rowHeight * 2, "Nearby Distance", "Search radius around the crafting table.");
+		this.derk$drawRow(context, labelX, fieldX, startY + rowHeight * 3, "Highlight Opacity", "Opacity of the filled highlight overlay.");
+		this.derk$drawRow(context, labelX, fieldX, startY + rowHeight * 4, "Auto Refresh", "How often the nearby list refreshes while open.");
+		this.derk$drawRow(context, labelX, fieldX, startY + rowHeight * 5, "Distance Label", "Show the floating distance text above highlights.");
+		this.derk$drawRow(context, labelX, fieldX, startY + rowHeight * 6, "Panel Default", "Whether the nearby panel starts opened.");
+		this.derk$drawColorPreview(context, fieldX + 172, startY + 2);
+	}
+
+	private TextFieldWidget derk$createField(int x, int y, int width, String value) {
+		TextFieldWidget field = new TextFieldWidget(this.textRenderer, x, y, width, 20, Text.empty());
+		field.setText(value);
+		this.addDrawableChild(field);
+		return field;
+	}
+
+	private void derk$drawRow(DrawContext context, int labelX, int fieldX, int y, String title, String description) {
+		int labelWidth = this.textRenderer.getWidth(title + ":");
+		int inlineLabelX = fieldX - labelWidth - 12;
+		context.fill(fieldX - 8, y - 4, fieldX + 170, y + 24, 0x301F232B);
+		context.drawTextWithShadow(this.textRenderer, Text.of(title + ":"), inlineLabelX, y + 6, 0xFFFFFF);
+		context.drawTextWithShadow(this.textRenderer, Text.of(description), labelX, y + 24, 0xB9C0CB);
+	}
+
+	private void derk$drawColorPreview(DrawContext context, int x, int y) {
+		try {
+			int color = this.derk$parseHexColor(this.highlightColorField.getText());
+			context.fill(x, y, x + 20, y + 20, 0xFF000000 | color);
+			this.derk$drawBorder(context, x, y, 20, 20, 0xFFFFFFFF);
+		} catch (IllegalArgumentException ignored) {
+			context.fill(x, y, x + 20, y + 20, 0xFF550000);
+			this.derk$drawBorder(context, x, y, 20, 20, 0xFFFF7777);
+		}
+	}
+
+	private void derk$drawBorder(DrawContext context, int x, int y, int width, int height, int color) {
+		context.fill(x, y, x + width, y + 1, color);
+		context.fill(x, y + height - 1, x + width, y + height, color);
+		context.fill(x, y, x + 1, y + height, color);
+		context.fill(x + width - 1, y, x + width, y + height, color);
+	}
+
+	private Text derk$getDistanceLabelText() {
+		return Text.of("Distance Label: " + (this.showDistanceLabel ? "On" : "Off"));
+	}
+
+	private Text derk$getPanelDefaultText() {
+		return Text.of("Panel Default: " + (this.nearbyPanelOpenByDefault ? "Open" : "Closed"));
+	}
+
+	private void derk$resetToDefaults() {
+		ConfigData defaults = ConfigData.defaults();
+		this.highlightColorField.setText(String.format(Locale.ROOT, "#%06X", defaults.highlightColor));
+		this.highlightDurationField.setText(this.derk$formatSeconds(defaults.highlightDurationTicks));
+		this.nearbyRadiusField.setText(Integer.toString(defaults.nearbyRadius));
+		this.highlightOpacityField.setText(Integer.toString(defaults.highlightOpacityPercent));
+		this.autoRefreshField.setText(this.derk$formatSeconds(defaults.autoRefreshTicks));
+		this.showDistanceLabel = defaults.showDistanceLabel;
+		this.nearbyPanelOpenByDefault = defaults.nearbyPanelOpenByDefault;
+		this.showDistanceLabelButton.setMessage(this.derk$getDistanceLabelText());
+		this.panelDefaultButton.setMessage(this.derk$getPanelDefaultText());
+		this.errorText = Text.empty();
+	}
+
+	private void derk$save() {
+		try {
+			ConfigData updated = EasyInventoryCrafterConfig.snapshot();
+			updated.highlightColor = this.derk$parseHexColor(this.highlightColorField.getText());
+			updated.highlightDurationTicks = this.derk$parseSecondsToTicks(this.highlightDurationField.getText(), 0.5, 60.0);
+			updated.nearbyRadius = this.derk$parseInt(this.nearbyRadiusField.getText(), 1, 64, "Nearby radius");
+			updated.highlightOpacityPercent = this.derk$parseInt(this.highlightOpacityField.getText(), 5, 100, "Highlight opacity");
+			updated.autoRefreshTicks = this.derk$parseSecondsToTicks(this.autoRefreshField.getText(), 0.25, 30.0);
+			updated.showDistanceLabel = this.showDistanceLabel;
+			updated.nearbyPanelOpenByDefault = this.nearbyPanelOpenByDefault;
+			EasyInventoryCrafterConfig.update(updated);
+			NearbyItemsClientState.requestUpdate();
+			this.close();
+		} catch (IllegalArgumentException exception) {
+			this.errorText = Text.of(exception.getMessage());
+		}
+	}
+
+	private int derk$parseHexColor(String raw) {
+		String normalized = raw.trim();
+		if (normalized.startsWith("#")) {
+			normalized = normalized.substring(1);
+		}
+		if (!normalized.matches("[0-9a-fA-F]{6}")) {
+			throw new IllegalArgumentException("Highlight color must be a 6-digit hex value.");
+		}
+		return Integer.parseInt(normalized, 16);
+	}
+
+	private int derk$parseSecondsToTicks(String raw, double minSeconds, double maxSeconds) {
+		double value;
+		try {
+			value = Double.parseDouble(raw.trim());
+		} catch (NumberFormatException exception) {
+			throw new IllegalArgumentException("Enter a valid number of seconds.");
+		}
+		if (value < minSeconds || value > maxSeconds) {
+			throw new IllegalArgumentException(String.format("Seconds must be between %.2f and %.2f.", minSeconds, maxSeconds));
+		}
+		return Math.max(1, (int)Math.round(value * 20.0));
+	}
+
+	private int derk$parseInt(String raw, int min, int max, String label) {
+		int value;
+		try {
+			value = Integer.parseInt(raw.trim());
+		} catch (NumberFormatException exception) {
+			throw new IllegalArgumentException(label + " must be a whole number.");
+		}
+		if (value < min || value > max) {
+			throw new IllegalArgumentException(label + " must be between " + min + " and " + max + ".");
+		}
+		return value;
+	}
+
+	private String derk$formatSeconds(int ticks) {
+		return String.format(java.util.Locale.ROOT, "%.2f", ticks / 20.0);
+	}
+}

@@ -21,6 +21,9 @@
     ],
     "client": [
       "com.derk.easyinventorycrafter.EasyInventoryCrafterClient"
+	],
+	"modmenu": [
+	  "com.derk.easyinventorycrafter.client.EasyInventoryCrafterModMenu"
     ]
   },
   "mixins": [
@@ -32,5 +35,7 @@
     "fabric": "*",
     "minecraft": ">=1.21.11"
   },
-  "suggests": {}
+  "suggests": {
+	"modmenu": "*"
+  }
 }

@@ -1,5 +1,6 @@
 package com.derk.easyinventorycrafter.mixin;
 
+import com.derk.easyinventorycrafter.EasyInventoryCrafterConfig;
 import com.derk.easyinventorycrafter.client.NearbyItemsClientState;
 import com.derk.easyinventorycrafter.client.NearbyPanelAccess;
 import com.derk.easyinventorycrafter.NearbyInventoryScanner.NearbyItemEntry;
@@ -63,6 +64,7 @@ public abstract class CraftingScreenMixin extends RecipeBookScreen<CraftingScree
 	@Inject(method = "init", at = @At("TAIL"))
 	private void derk$initNearbyPanel(CallbackInfo ci) {
 		NearbyItemsClientState.clear();
+		this.derk$nearbyOpen = EasyInventoryCrafterConfig.isNearbyPanelOpenByDefault();
 		int buttonX = this.x + this.backgroundWidth + 6;
 		int buttonY = this.y + 6;
 		ButtonWidget button = ButtonWidget.builder(Text.of("Nearby"), btn -> {
@@ -249,7 +251,7 @@ public abstract class CraftingScreenMixin extends RecipeBookScreen<CraftingScree
 		int slotY = startY + row * slotSize;
 		float t = age / 6.0f;
 		int alpha = MathHelper.clamp((int)(160 * (1.0f - t)), 0, 160);
-		int color = (alpha << 24) | 0x00FFD966;
+		int color = (alpha << 24) | EasyInventoryCrafterConfig.getHighlightColor();
 		context.fill(slotX, slotY, slotX + 18, slotY + 18, color);
 	}
 
