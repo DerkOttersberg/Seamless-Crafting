@@ -7,9 +7,9 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.ColorHelper;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 
 public final class EasyHighlightRenderer {
     private static final float HIGHLIGHT_ALPHA = 0.4f;
@@ -45,8 +45,7 @@ public final class EasyHighlightRenderer {
         double cz = labelPos.z - camPos.z;
         matrices.translate(cx, cy, cz);
 
-        Quaternionf rotation = new Quaternionf(client.gameRenderer.getCamera().getRotation()).conjugate();
-        matrices.multiply(rotation);
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-client.gameRenderer.getCamera().getYaw()));
         matrices.scale(-0.025f, -0.025f, 0.025f);
 
         Matrix4f textMatrix = matrices.peek().getPositionMatrix();
