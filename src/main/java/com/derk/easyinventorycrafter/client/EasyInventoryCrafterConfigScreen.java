@@ -11,6 +11,13 @@ import net.minecraft.text.Text;
 
 public class EasyInventoryCrafterConfigScreen extends Screen {
 	private final Screen parent;
+	private ButtonWidget highlightColorLabelButton;
+	private ButtonWidget highlightDurationLabelButton;
+	private ButtonWidget nearbyRadiusLabelButton;
+	private ButtonWidget highlightOpacityLabelButton;
+	private ButtonWidget autoRefreshLabelButton;
+	private ButtonWidget distanceLabelLabelButton;
+	private ButtonWidget panelDefaultLabelButton;
 	private TextFieldWidget highlightColorField;
 	private TextFieldWidget highlightDurationField;
 	private TextFieldWidget nearbyRadiusField;
@@ -35,10 +42,20 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
 		this.nearbyPanelOpenByDefault = config.nearbyPanelOpenByDefault;
 
 		int centerX = this.width / 2;
-		int fieldX = centerX + 56;
+		int labelButtonX = centerX - 168;
+		int labelButtonWidth = 126;
+		int fieldX = labelButtonX + labelButtonWidth + 10;
 		int fieldWidth = 108;
 		int startY = 62;
 		int rowHeight = 34;
+
+		this.highlightColorLabelButton = this.derk$createLabelButton(labelButtonX, startY, labelButtonWidth, "Highlight Color");
+		this.highlightDurationLabelButton = this.derk$createLabelButton(labelButtonX, startY + rowHeight, labelButtonWidth, "Highlight Duration");
+		this.nearbyRadiusLabelButton = this.derk$createLabelButton(labelButtonX, startY + rowHeight * 2, labelButtonWidth, "Nearby Distance");
+		this.highlightOpacityLabelButton = this.derk$createLabelButton(labelButtonX, startY + rowHeight * 3, labelButtonWidth, "Highlight Opacity");
+		this.autoRefreshLabelButton = this.derk$createLabelButton(labelButtonX, startY + rowHeight * 4, labelButtonWidth, "Auto Refresh");
+		this.distanceLabelLabelButton = this.derk$createLabelButton(labelButtonX, startY + rowHeight * 5, labelButtonWidth, "Distance Label");
+		this.panelDefaultLabelButton = this.derk$createLabelButton(labelButtonX, startY + rowHeight * 6, labelButtonWidth, "Panel Default");
 
 		this.highlightColorField = this.derk$createField(fieldX, startY, fieldWidth, String.format(Locale.ROOT, "#%06X", config.highlightColor));
 		this.highlightColorField.setPlaceholder(Text.of("#RRGGBB"));
@@ -101,14 +118,20 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
 		}
 
 		super.render(context, mouseX, mouseY, delta);
-		this.derk$drawRow(context, labelX, fieldX, startY, "Highlight Color", "Pick a color visually or type a hex code.");
-		this.derk$drawRow(context, labelX, fieldX, startY + rowHeight, "Highlight Duration", "How long chest highlights stay visible.");
-		this.derk$drawRow(context, labelX, fieldX, startY + rowHeight * 2, "Nearby Distance", "Search radius around the crafting table.");
-		this.derk$drawRow(context, labelX, fieldX, startY + rowHeight * 3, "Highlight Opacity", "Opacity of the filled highlight overlay.");
-		this.derk$drawRow(context, labelX, fieldX, startY + rowHeight * 4, "Auto Refresh", "How often the nearby list refreshes while open.");
-		this.derk$drawRow(context, labelX, fieldX, startY + rowHeight * 5, "Distance Label", "Show the floating distance text above highlights.");
-		this.derk$drawRow(context, labelX, fieldX, startY + rowHeight * 6, "Panel Default", "Whether the nearby panel starts opened.");
+		this.derk$drawRowDescription(context, labelX, startY, "Pick a color visually or type a hex code.");
+		this.derk$drawRowDescription(context, labelX, startY + rowHeight, "How long chest highlights stay visible.");
+		this.derk$drawRowDescription(context, labelX, startY + rowHeight * 2, "Search radius around the crafting table.");
+		this.derk$drawRowDescription(context, labelX, startY + rowHeight * 3, "Opacity of the filled highlight overlay.");
+		this.derk$drawRowDescription(context, labelX, startY + rowHeight * 4, "How often the nearby list refreshes while open.");
+		this.derk$drawRowDescription(context, labelX, startY + rowHeight * 5, "Show the floating distance text above highlights.");
+		this.derk$drawRowDescription(context, labelX, startY + rowHeight * 6, "Whether the nearby panel starts opened.");
 		this.derk$drawColorPreview(context, fieldX + 172, startY + 2);
+	}
+
+	private ButtonWidget derk$createLabelButton(int x, int y, int width, String label) {
+		return this.addDrawableChild(ButtonWidget.builder(Text.of(label), button -> {
+			// Intentional no-op: this is a visual label button.
+		}).dimensions(x, y, width, 20).build());
 	}
 
 	private TextFieldWidget derk$createField(int x, int y, int width, String value) {
@@ -118,11 +141,7 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
 		return field;
 	}
 
-	private void derk$drawRow(DrawContext context, int labelX, int fieldX, int y, String title, String description) {
-		int labelWidth = this.textRenderer.getWidth(title + ":");
-		int inlineLabelX = fieldX - labelWidth - 12;
-		context.fill(fieldX - 8, y - 4, fieldX + 170, y + 24, 0x301F232B);
-		context.drawTextWithShadow(this.textRenderer, Text.of(title + ":"), inlineLabelX, y + 6, 0xFFFFFF);
+	private void derk$drawRowDescription(DrawContext context, int labelX, int y, String description) {
 		context.drawTextWithShadow(this.textRenderer, Text.of(description), labelX, y + 24, 0xB9C0CB);
 	}
 
@@ -145,11 +164,11 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
 	}
 
 	private Text derk$getDistanceLabelText() {
-		return Text.of("Distance Label: " + (this.showDistanceLabel ? "On" : "Off"));
+		return Text.of(this.showDistanceLabel ? "On" : "Off");
 	}
 
 	private Text derk$getPanelDefaultText() {
-		return Text.of("Panel Default: " + (this.nearbyPanelOpenByDefault ? "Open" : "Closed"));
+		return Text.of(this.nearbyPanelOpenByDefault ? "Open" : "Closed");
 	}
 
 	private void derk$resetToDefaults() {
