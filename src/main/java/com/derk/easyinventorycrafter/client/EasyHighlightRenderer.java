@@ -11,7 +11,7 @@ public final class EasyHighlightRenderer {
     private EasyHighlightRenderer() {
     }
 
-    public static void renderBox(MatrixStack matrices, VertexConsumer consumer, Vec3d camPos, Box box, float alpha) {
+    public static void renderOutlineBox(MatrixStack matrices, VertexConsumer consumer, Vec3d camPos, Box box, float alpha) {
         matrices.push();
 
         double cx = (box.minX + box.maxX) / 2.0 - camPos.x;
@@ -25,40 +25,31 @@ public final class EasyHighlightRenderer {
 
         MatrixStack.Entry matrixEntry = matrices.peek();
 
-        // Gold color at 40% opacity.
-        int color = ColorHelper.getArgb((int) (alpha * 0.4f * 255), 255, 215, 0);
+        int color = ColorHelper.getArgb((int) (alpha * 0.9f * 255), 255, 215, 0);
 
-        // -Z face
-        consumer.vertex(matrixEntry, -hw, -hh, -hd).color(color);
-        consumer.vertex(matrixEntry, -hw,  hh, -hd).color(color);
-        consumer.vertex(matrixEntry,  hw,  hh, -hd).color(color);
-        consumer.vertex(matrixEntry,  hw, -hh, -hd).color(color);
-        // +Z face
-        consumer.vertex(matrixEntry, -hw, -hh,  hd).color(color);
-        consumer.vertex(matrixEntry,  hw, -hh,  hd).color(color);
-        consumer.vertex(matrixEntry,  hw,  hh,  hd).color(color);
-        consumer.vertex(matrixEntry, -hw,  hh,  hd).color(color);
-        // -Y face
-        consumer.vertex(matrixEntry, -hw, -hh, -hd).color(color);
-        consumer.vertex(matrixEntry,  hw, -hh, -hd).color(color);
-        consumer.vertex(matrixEntry,  hw, -hh,  hd).color(color);
-        consumer.vertex(matrixEntry, -hw, -hh,  hd).color(color);
-        // +Y face
-        consumer.vertex(matrixEntry, -hw,  hh, -hd).color(color);
-        consumer.vertex(matrixEntry, -hw,  hh,  hd).color(color);
-        consumer.vertex(matrixEntry,  hw,  hh,  hd).color(color);
-        consumer.vertex(matrixEntry,  hw,  hh, -hd).color(color);
-        // -X face
-        consumer.vertex(matrixEntry, -hw, -hh, -hd).color(color);
-        consumer.vertex(matrixEntry, -hw, -hh,  hd).color(color);
-        consumer.vertex(matrixEntry, -hw,  hh,  hd).color(color);
-        consumer.vertex(matrixEntry, -hw,  hh, -hd).color(color);
-        // +X face
-        consumer.vertex(matrixEntry,  hw, -hh, -hd).color(color);
-        consumer.vertex(matrixEntry,  hw,  hh, -hd).color(color);
-        consumer.vertex(matrixEntry,  hw,  hh,  hd).color(color);
-        consumer.vertex(matrixEntry,  hw, -hh,  hd).color(color);
+        addLine(consumer, matrixEntry, -hw, -hh, -hd, -hw,  hh, -hd, color);
+        addLine(consumer, matrixEntry,  hw, -hh, -hd,  hw,  hh, -hd, color);
+        addLine(consumer, matrixEntry, -hw, -hh,  hd, -hw,  hh,  hd, color);
+        addLine(consumer, matrixEntry,  hw, -hh,  hd,  hw,  hh,  hd, color);
+
+        addLine(consumer, matrixEntry, -hw, -hh, -hd,  hw, -hh, -hd, color);
+        addLine(consumer, matrixEntry, -hw, -hh,  hd,  hw, -hh,  hd, color);
+        addLine(consumer, matrixEntry, -hw,  hh, -hd,  hw,  hh, -hd, color);
+        addLine(consumer, matrixEntry, -hw,  hh,  hd,  hw,  hh,  hd, color);
+
+        addLine(consumer, matrixEntry, -hw, -hh, -hd, -hw, -hh,  hd, color);
+        addLine(consumer, matrixEntry,  hw, -hh, -hd,  hw, -hh,  hd, color);
+        addLine(consumer, matrixEntry, -hw,  hh, -hd, -hw,  hh,  hd, color);
+        addLine(consumer, matrixEntry,  hw,  hh, -hd,  hw,  hh,  hd, color);
 
         matrices.pop();
+    }
+
+    private static void addLine(VertexConsumer consumer, MatrixStack.Entry matrixEntry,
+                                float x1, float y1, float z1,
+                                float x2, float y2, float z2,
+                                int color) {
+        consumer.vertex(matrixEntry, x1, y1, z1).color(color);
+        consumer.vertex(matrixEntry, x2, y2, z2).color(color);
     }
 }
