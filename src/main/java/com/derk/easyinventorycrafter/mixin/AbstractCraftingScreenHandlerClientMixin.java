@@ -3,6 +3,8 @@ package com.derk.easyinventorycrafter.mixin;
 import com.derk.easyinventorycrafter.NearbyInventoryScanner.NearbyItemEntry;
 import com.derk.easyinventorycrafter.client.NearbyItemsClientState;
 import java.util.List;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeFinder;
 import net.minecraft.screen.AbstractCraftingScreenHandler;
 import net.minecraft.screen.PlayerScreenHandler;
@@ -19,19 +21,17 @@ public class AbstractCraftingScreenHandlerClientMixin {
 			return;
 		}
 
-		List<NearbyItemEntry> entries = NearbyItemsClientState.getEntries();
-		for (NearbyItemEntry entry : entries) {
-			if (entry.stack().isEmpty() || entry.count() <= 0) {
+		if (!MinecraftClient.getInstance().isOnThread()) {
+			return;
+		}
+
+		List<ItemStack> nearbyStacks = NearbyItemsClientState.getRecipeFinderStacks();
+		for (ItemStack stack : nearbyStacks) {
+			if (stack.isEmpty()) {
 				continue;
 			}
 
-			int remaining = entry.count();
-			int maxStackSize = entry.stack().getMaxCount();
-			while (remaining > 0) {
-				int chunkSize = Math.min(remaining, maxStackSize);
-				finder.addInput(entry.stack().copyWithCount(chunkSize), chunkSize);
-				remaining -= chunkSize;
-			}
+			finder.addInputIfUsable(stack);
 		}
 	}
 }

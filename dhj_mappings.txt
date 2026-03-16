@@ -1,0 +1,7 @@
+	m	(Lddu;)V	a	method_61237	populateRecipeFinder
+	m	(Lddu;)V	a	method_7387	populateRecipeFinder
+c	dhj	net/minecraft/class_9884	net/minecraft/screen/AbstractCraftingScreenHandler
+	m	(Laxf;Ldqx;)V	a	method_59964	onInputSlotFillFinish
+	m	()V	l	method_59963	onInputSlotFillStart
+c	dhj$1	net/minecraft/class_9884$1	net/minecraft/screen/AbstractCraftingScreenHandler$1
+	m	(Lddu;)V	a	method_7654	populateRecipeFinder

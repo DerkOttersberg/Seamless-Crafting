@@ -86,6 +86,27 @@ public final class NearbyInventoryScanner {
 		return entries;
 	}
 
+	public static List<ItemStack> collectRecipeFinderStacks(World world, BlockPos center, int radius) {
+		List<Inventory> inventories = findNearbyInventories(world, center, radius);
+		List<ItemStack> stacks = new ArrayList<>();
+
+		for (Inventory inventory : inventories) {
+			for (int i = 0; i < inventory.size(); i++) {
+				ItemStack stack = inventory.getStack(i);
+				if (stack.isEmpty() || !PlayerInventory.usableWhenFillingSlot(stack)) {
+					continue;
+				}
+
+				stacks.add(stack.copy());
+				if (stacks.size() >= MAX_ENTRIES) {
+					return stacks;
+				}
+			}
+		}
+
+		return stacks;
+	}
+
 	@Nullable
 	public static BlockPos findFirstInventoryPosWithItem(World world, BlockPos center, int radius, Item item) {
 		BlockPos min = center.add(-radius, -radius, -radius);

@@ -1,0 +1,520 @@
+Compiled from "SourceFile"
+public class amf<R extends dqs<?>> {
+  private static final int a;
+
+  private final ddl b;
+
+  private final amf$a<R> c;
+
+  private final boolean d;
+
+  private final int e;
+
+  private final int f;
+
+  private final java.util.List<dji> g;
+
+  private final java.util.List<dji> h;
+
+  public static <I extends dqy, R extends dqs<I>> diz$a a(amf$a<R>, int, int, java.util.List<dji>, java.util.List<dji>, ddl, dqx<R>, boolean, boolean);
+    Code:
+       0: new           #2                  // class amf
+       3: dup
+       4: aload_0
+       5: aload         5
+       7: iload         7
+       9: iload_1
+      10: iload_2
+      11: aload_3
+      12: aload         4
+      14: invokespecial #47                 // Method "<init>":(Lamf$a;Lddl;ZIILjava/util/List;Ljava/util/List;)V
+      17: astore        9
+      19: iload         8
+      21: ifne          36
+      24: aload         9
+      26: invokevirtual #50                 // Method b:()Z
+      29: ifne          36
+      32: getstatic     #53                 // Field diz$a.a:Ldiz$a;
+      35: areturn
+      36: new           #59                 // class ddu
+      39: dup
+      40: invokespecial #62                 // Method ddu."<init>":()V
+      43: astore        10
+      45: aload         5
+      47: aload         10
+      49: invokevirtual #65                 // Method ddl.a:(Lddu;)V
+      52: aload_0
+      53: aload         10
+      55: invokeinterface #66,  2           // InterfaceMethod amf$a.a:(Lddu;)V
+      60: aload         9
+      62: aload         6
+      64: aload         10
+      66: invokevirtual #69                 // Method a:(Ldqx;Lddu;)Ldiz$a;
+      69: areturn
+
+  private amf(amf$a<R>, ddl, boolean, int, int, java.util.List<dji>, java.util.List<dji>);
+    Code:
+       0: aload_0
+       1: invokespecial #87                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: aload_1
+       6: putfield      #89                 // Field c:Lamf$a;
+       9: aload_0
+      10: aload_2
+      11: putfield      #91                 // Field b:Lddl;
+      14: aload_0
+      15: iload_3
+      16: putfield      #93                 // Field d:Z
+      19: aload_0
+      20: iload         4
+      22: putfield      #95                 // Field e:I
+      25: aload_0
+      26: iload         5
+      28: putfield      #97                 // Field f:I
+      31: aload_0
+      32: aload         6
+      34: putfield      #99                 // Field g:Ljava/util/List;
+      37: aload_0
+      38: aload         7
+      40: putfield      #101                // Field h:Ljava/util/List;
+      43: return
+
+  private diz$a a(dqx<R>, ddu);
+    Code:
+       0: aload_2
+       1: aload_1
+       2: invokevirtual #106                // Method dqx.b:()Ldqs;
+       5: aconst_null
+       6: invokevirtual #109                // Method ddu.a:(Ldqs;Lddt$b;)Z
+       9: ifeq          29
+      12: aload_0
+      13: aload_1
+      14: aload_2
+      15: invokevirtual #112                // Method b:(Ldqx;Lddu;)V
+      18: aload_0
+      19: getfield      #91                 // Field b:Lddl;
+      22: invokevirtual #114                // Method ddl.e:()V
+      25: getstatic     #53                 // Field diz$a.a:Ldiz$a;
+      28: areturn
+      29: aload_0
+      30: invokevirtual #116                // Method a:()V
+      33: aload_0
+      34: getfield      #91                 // Field b:Lddl;
+      37: invokevirtual #114                // Method ddl.e:()V
+      40: getstatic     #118                // Field diz$a.b:Ldiz$a;
+      43: areturn
+
+  private void a();
+    Code:
+       0: aload_0
+       1: getfield      #101                // Field h:Ljava/util/List;
+       4: invokeinterface #124,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       9: astore_1
+      10: aload_1
+      11: invokeinterface #129,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      16: ifeq          54
+      19: aload_1
+      20: invokeinterface #133,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      25: checkcast     #135                // class dji
+      28: astore_2
+      29: aload_2
+      30: invokevirtual #138                // Method dji.g:()Ldlt;
+      33: invokevirtual #143                // Method dlt.v:()Ldlt;
+      36: astore_3
+      37: aload_0
+      38: getfield      #91                 // Field b:Lddl;
+      41: aload_3
+      42: iconst_0
+      43: invokevirtual #146                // Method ddl.a:(Ldlt;Z)V
+      46: aload_2
+      47: aload_3
+      48: invokevirtual #149                // Method dji.f:(Ldlt;)V
+      51: goto          10
+      54: aload_0
+      55: getfield      #89                 // Field c:Lamf$a;
+      58: invokeinterface #150,  1          // InterfaceMethod amf$a.a:()V
+      63: return
+
+  private void b(dqx<R>, ddu);
+    Code:
+       0: aload_0
+       1: getfield      #89                 // Field c:Lamf$a;
+       4: aload_1
+       5: invokeinterface #156,  2          // InterfaceMethod amf$a.a:(Ldqx;)Z
+      10: istore_3
+      11: aload_2
+      12: aload_1
+      13: invokevirtual #106                // Method dqx.b:()Ldqs;
+      16: aconst_null
+      17: invokevirtual #159                // Method ddu.b:(Ldqs;Lddt$b;)I
+      20: istore        4
+      22: iload_3
+      23: ifeq          98
+      26: aload_0
+      27: getfield      #99                 // Field g:Ljava/util/List;
+      30: invokeinterface #124,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      35: astore        5
+      37: aload         5
+      39: invokeinterface #129,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      44: ifeq          98
+      47: aload         5
+      49: invokeinterface #133,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      54: checkcast     #135                // class dji
+      57: astore        6
+      59: aload         6
+      61: invokevirtual #138                // Method dji.g:()Ldlt;
+      64: astore        7
+      66: aload         7
+      68: invokevirtual #161                // Method dlt.f:()Z
+      71: ifne          95
+      74: iload         4
+      76: aload         7
+      78: invokevirtual #165                // Method dlt.k:()I
+      81: invokestatic  #171                // Method java/lang/Math.min:(II)I
+      84: aload         7
+      86: invokevirtual #174                // Method dlt.N:()I
+      89: iconst_1
+      90: iadd
+      91: if_icmpge     95
+      94: return
+      95: goto          37
+      98: aload_0
+      99: iload         4
+     101: iload_3
+     102: invokevirtual #177                // Method a:(IZ)I
+     105: istore        5
+     107: new           #179                // class java/util/ArrayList
+     110: dup
+     111: invokespecial #180                // Method java/util/ArrayList."<init>":()V
+     114: astore        6
+     116: aload_2
+     117: aload_1
+     118: invokevirtual #106                // Method dqx.b:()Ldqs;
+     121: iload         5
+     123: aload         6
+     125: dup
+     126: invokestatic  #186                // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+     129: pop
+     130: invokedynamic #206,  0            // InvokeDynamic #0:accept:(Ljava/util/List;)Lddt$b;
+     135: invokevirtual #209                // Method ddu.a:(Ldqs;ILddt$b;)Z
+     138: ifne          142
+     141: return
+     142: iload         5
+     144: aload         6
+     146: invokestatic  #212                // Method a:(ILjava/util/List;)I
+     149: istore        7
+     151: iload         7
+     153: iload         5
+     155: if_icmpeq     191
+     158: aload         6
+     160: invokeinterface #215,  1          // InterfaceMethod java/util/List.clear:()V
+     165: aload_2
+     166: aload_1
+     167: invokevirtual #106                // Method dqx.b:()Ldqs;
+     170: iload         7
+     172: aload         6
+     174: dup
+     175: invokestatic  #186                // Method java/util/Objects.requireNonNull:(Ljava/lang/Object;)Ljava/lang/Object;
+     178: pop
+     179: invokedynamic #206,  0            // InvokeDynamic #0:accept:(Ljava/util/List;)Lddt$b;
+     184: invokevirtual #209                // Method ddu.a:(Ldqs;ILddt$b;)Z
+     187: ifne          191
+     190: return
+     191: aload_0
+     192: invokevirtual #116                // Method a:()V
+     195: aload_0
+     196: getfield      #95                 // Field e:I
+     199: aload_0
+     200: getfield      #97                 // Field f:I
+     203: aload_1
+     204: invokevirtual #106                // Method dqx.b:()Ldqs;
+     207: aload_1
+     208: invokevirtual #106                // Method dqx.b:()Ldqs;
+     211: invokeinterface #221,  1          // InterfaceMethod dqs.aq_:()Ldqr;
+     216: invokevirtual #226                // Method dqr.a:()Lit/unimi/dsi/fastutil/ints/IntList;
+     219: aload_0
+     220: aload         6
+     222: iload         7
+     224: invokedynamic #238,  0            // InvokeDynamic #1:addItemToSlot:(Lamf;Ljava/util/List;I)Lame$a;
+     229: invokestatic  #241                // InterfaceMethod ame.a:(IILdqs;Ljava/lang/Iterable;Lame$a;)V
+     232: return
+
+  private static int a(int, java.util.List<jd<dlp>>);
+    Code:
+       0: aload_1
+       1: invokeinterface #124,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+       6: astore_2
+       7: aload_2
+       8: invokeinterface #129,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      13: ifeq          46
+      16: aload_2
+      17: invokeinterface #133,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      22: checkcast     #245                // class jd
+      25: astore_3
+      26: iload_0
+      27: aload_3
+      28: invokeinterface #247,  1          // InterfaceMethod jd.a:()Ljava/lang/Object;
+      33: checkcast     #249                // class dlp
+      36: invokevirtual #251                // Method dlp.g:()I
+      39: invokestatic  #171                // Method java/lang/Math.min:(II)I
+      42: istore_0
+      43: goto          7
+      46: iload_0
+      47: ireturn
+
+  private int a(int, boolean);
+    Code:
+       0: aload_0
+       1: getfield      #93                 // Field d:Z
+       4: ifeq          9
+       7: iload_1
+       8: ireturn
+       9: iload_2
+      10: ifeq          93
+      13: ldc           #254                // int 2147483647
+      15: istore_3
+      16: aload_0
+      17: getfield      #99                 // Field g:Ljava/util/List;
+      20: invokeinterface #124,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      25: astore        4
+      27: aload         4
+      29: invokeinterface #129,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      34: ifeq          82
+      37: aload         4
+      39: invokeinterface #133,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      44: checkcast     #135                // class dji
+      47: astore        5
+      49: aload         5
+      51: invokevirtual #138                // Method dji.g:()Ldlt;
+      54: astore        6
+      56: aload         6
+      58: invokevirtual #161                // Method dlt.f:()Z
+      61: ifne          79
+      64: iload_3
+      65: aload         6
+      67: invokevirtual #174                // Method dlt.N:()I
+      70: if_icmple     79
+      73: aload         6
+      75: invokevirtual #174                // Method dlt.N:()I
+      78: istore_3
+      79: goto          27
+      82: iload_3
+      83: ldc           #254                // int 2147483647
+      85: if_icmpeq     91
+      88: iinc          3, 1
+      91: iload_3
+      92: ireturn
+      93: iconst_1
+      94: ireturn
+
+  private int a(dji, jd<dlp>, int);
+    Code:
+       0: aload_1
+       1: invokevirtual #138                // Method dji.g:()Ldlt;
+       4: astore        4
+       6: aload_0
+       7: getfield      #91                 // Field b:Lddl;
+      10: aload_2
+      11: aload         4
+      13: invokevirtual #259                // Method ddl.a:(Ljd;Ldlt;)I
+      16: istore        5
+      18: iload         5
+      20: iconst_m1
+      21: if_icmpne     26
+      24: iconst_m1
+      25: ireturn
+      26: aload_0
+      27: getfield      #91                 // Field b:Lddl;
+      30: iload         5
+      32: invokevirtual #262                // Method ddl.a:(I)Ldlt;
+      35: astore        6
+      37: iload_3
+      38: aload         6
+      40: invokevirtual #174                // Method dlt.N:()I
+      43: if_icmpge     61
+      46: aload_0
+      47: getfield      #91                 // Field b:Lddl;
+      50: iload         5
+      52: iload_3
+      53: invokevirtual #265                // Method ddl.a:(II)Ldlt;
+      56: astore        7
+      58: goto          72
+      61: aload_0
+      62: getfield      #91                 // Field b:Lddl;
+      65: iload         5
+      67: invokevirtual #267                // Method ddl.b:(I)Ldlt;
+      70: astore        7
+      72: aload         7
+      74: invokevirtual #174                // Method dlt.N:()I
+      77: istore        8
+      79: aload         4
+      81: invokevirtual #161                // Method dlt.f:()Z
+      84: ifeq          96
+      87: aload_1
+      88: aload         7
+      90: invokevirtual #149                // Method dji.f:(Ldlt;)V
+      93: goto          103
+      96: aload         4
+      98: iload         8
+     100: invokevirtual #270                // Method dlt.g:(I)V
+     103: iload_3
+     104: iload         8
+     106: isub
+     107: ireturn
+
+  private boolean b();
+    Code:
+       0: invokestatic  #276                // Method com/google/common/collect/Lists.newArrayList:()Ljava/util/ArrayList;
+       3: astore_1
+       4: aload_0
+       5: invokevirtual #278                // Method c:()I
+       8: istore_2
+       9: aload_0
+      10: getfield      #99                 // Field g:Ljava/util/List;
+      13: invokeinterface #124,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      18: astore_3
+      19: aload_3
+      20: invokeinterface #129,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      25: ifeq          224
+      28: aload_3
+      29: invokeinterface #133,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      34: checkcast     #135                // class dji
+      37: astore        4
+      39: aload         4
+      41: invokevirtual #138                // Method dji.g:()Ldlt;
+      44: invokevirtual #143                // Method dlt.v:()Ldlt;
+      47: astore        5
+      49: aload         5
+      51: invokevirtual #161                // Method dlt.f:()Z
+      54: ifeq          60
+      57: goto          19
+      60: aload_0
+      61: getfield      #91                 // Field b:Lddl;
+      64: aload         5
+      66: invokevirtual #281                // Method ddl.f:(Ldlt;)I
+      69: istore        6
+      71: iload         6
+      73: iconst_m1
+      74: if_icmpne     213
+      77: aload_1
+      78: invokeinterface #284,  1          // InterfaceMethod java/util/List.size:()I
+      83: iload_2
+      84: if_icmpgt     213
+      87: aload_1
+      88: invokeinterface #124,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+      93: astore        7
+      95: aload         7
+      97: invokeinterface #129,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     102: ifeq          181
+     105: aload         7
+     107: invokeinterface #133,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     112: checkcast     #140                // class dlt
+     115: astore        8
+     117: aload         8
+     119: aload         5
+     121: invokestatic  #287                // Method dlt.b:(Ldlt;Ldlt;)Z
+     124: ifeq          178
+     127: aload         8
+     129: invokevirtual #174                // Method dlt.N:()I
+     132: aload         8
+     134: invokevirtual #165                // Method dlt.k:()I
+     137: if_icmpeq     178
+     140: aload         8
+     142: invokevirtual #174                // Method dlt.N:()I
+     145: aload         5
+     147: invokevirtual #174                // Method dlt.N:()I
+     150: iadd
+     151: aload         8
+     153: invokevirtual #165                // Method dlt.k:()I
+     156: if_icmpgt     178
+     159: aload         8
+     161: aload         5
+     163: invokevirtual #174                // Method dlt.N:()I
+     166: invokevirtual #270                // Method dlt.g:(I)V
+     169: aload         5
+     171: iconst_0
+     172: invokevirtual #289                // Method dlt.e:(I)V
+     175: goto          181
+     178: goto          95
+     181: aload         5
+     183: invokevirtual #161                // Method dlt.f:()Z
+     186: ifne          19
+     189: aload_1
+     190: invokeinterface #284,  1          // InterfaceMethod java/util/List.size:()I
+     195: iload_2
+     196: if_icmpge     211
+     199: aload_1
+     200: aload         5
+     202: invokeinterface #192,  2          // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+     207: pop
+     208: goto          19
+     211: iconst_0
+     212: ireturn
+     213: iload         6
+     215: iconst_m1
+     216: if_icmpne     221
+     219: iconst_0
+     220: ireturn
+     221: goto          19
+     224: iconst_1
+     225: ireturn
+
+  private int c();
+    Code:
+       0: iconst_0
+       1: istore_1
+       2: aload_0
+       3: getfield      #91                 // Field b:Lddl;
+       6: invokevirtual #294                // Method ddl.j:()Ljm;
+       9: invokevirtual #297                // Method jm.iterator:()Ljava/util/Iterator;
+      12: astore_2
+      13: aload_2
+      14: invokeinterface #129,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      19: ifeq          45
+      22: aload_2
+      23: invokeinterface #133,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      28: checkcast     #140                // class dlt
+      31: astore_3
+      32: aload_3
+      33: invokevirtual #161                // Method dlt.f:()Z
+      36: ifeq          42
+      39: iinc          1, 1
+      42: goto          13
+      45: iload_1
+      46: ireturn
+
+  private void a(java.util.List, int, java.lang.Integer, int, int, int);
+    Code:
+       0: aload_3
+       1: invokevirtual #302                // Method java/lang/Integer.intValue:()I
+       4: iconst_m1
+       5: if_icmpne     9
+       8: return
+       9: aload_0
+      10: getfield      #99                 // Field g:Ljava/util/List;
+      13: iload         4
+      15: invokeinterface #306,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+      20: checkcast     #135                // class dji
+      23: astore        7
+      25: aload_1
+      26: aload_3
+      27: invokevirtual #302                // Method java/lang/Integer.intValue:()I
+      30: invokeinterface #306,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+      35: checkcast     #245                // class jd
+      38: astore        8
+      40: iload_2
+      41: istore        9
+      43: iload         9
+      45: ifle          67
+      48: aload_0
+      49: aload         7
+      51: aload         8
+      53: iload         9
+      55: invokevirtual #308                // Method a:(Ldji;Ljd;I)I
+      58: istore        9
+      60: iload         9
+      62: iconst_m1
+      63: if_icmpne     43
+      66: return
+      67: return
+}

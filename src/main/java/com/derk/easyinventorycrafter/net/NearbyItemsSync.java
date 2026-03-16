@@ -33,8 +33,13 @@ public final class NearbyItemsSync {
 				worldPos.pos(),
 				NearbyInventoryScanner.getConfiguredRadius()
 		);
+		List<ItemStack> recipeFinderStacks = NearbyInventoryScanner.collectRecipeFinderStacks(
+				worldPos.world(),
+				worldPos.pos(),
+				NearbyInventoryScanner.getConfiguredRadius()
+		);
 
-		ServerPlayNetworking.send(player, new NearbyItemsPayload(entries));
+		ServerPlayNetworking.send(player, new NearbyItemsPayload(entries, recipeFinderStacks));
 	}
 
 	@Nullable

@@ -1,0 +1,7 @@
+c	amf	net/minecraft/class_2955	net/minecraft/recipe/InputSlotFiller
+c	amf$a	net/minecraft/class_2955$class_9840	net/minecraft/recipe/InputSlotFiller$Handler
+c	dhj	net/minecraft/class_9884	net/minecraft/screen/AbstractCraftingScreenHandler
+c	dhj$1	net/minecraft/class_9884$1	net/minecraft/screen/AbstractCraftingScreenHandler$1
+c	dic	net/minecraft/class_1714	net/minecraft/screen/CraftingScreenHandler
+	f	Ldiz;	f	field_3095	craftingScreenHandler
+		p	1			craftingScreenHandler

@@ -22,6 +22,7 @@ public final class NearbyItemsClientState {
 	private static final int SMOKE_TRAIL_TICKS = 14;
 	private static final int SMOKE_PARTICLES_PER_TICK = 10;
 	private static List<NearbyItemEntry> entries = Collections.emptyList();
+	private static List<ItemStack> recipeFinderStacks = Collections.emptyList();
 	private static List<BlockPos> highlightPositions = Collections.emptyList();
 	private static int highlightTicks;
 	private static int highlightTotalTicks;
@@ -38,8 +39,13 @@ public final class NearbyItemsClientState {
 		return entries;
 	}
 
+	public static List<ItemStack> getRecipeFinderStacks() {
+		return recipeFinderStacks;
+	}
+
 	public static void clear() {
 		entries = Collections.emptyList();
+		recipeFinderStacks = Collections.emptyList();
 		highlightPositions = Collections.emptyList();
 		highlightTicks = 0;
 		highlightTotalTicks = 0;
@@ -58,6 +64,7 @@ public final class NearbyItemsClientState {
 
 	public static void applyPayload(NearbyItemsPayload payload) {
 		entries = payload.entries();
+		recipeFinderStacks = payload.recipeFinderStacks();
 		MinecraftClient client = MinecraftClient.getInstance();
 		client.execute(() -> {
 			if (client.currentScreen instanceof RecipeBookProvider recipeBookProvider) {

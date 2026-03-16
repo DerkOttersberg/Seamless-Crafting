@@ -1,0 +1,388 @@
+Compiled from "SourceFile"
+public class dic extends dhj {
+  private static final int p;
+
+  private static final int q;
+
+  public static final int o;
+
+  private static final int r;
+
+  private static final int s;
+
+  private static final int t;
+
+  private static final int u;
+
+  private static final int v;
+
+  private static final int w;
+
+  private static final int x;
+
+  private final dhw y;
+
+  private final ddm z;
+
+  private boolean A;
+
+  public dic(int, ddl);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: aload_2
+       3: getstatic     #45                 // Field dhw.a:Ldhw;
+       6: invokespecial #48                 // Method "<init>":(ILddl;Ldhw;)V
+       9: return
+
+  public dic(int, ddl, dhw);
+    Code:
+       0: aload_0
+       1: getstatic     #59                 // Field dis.m:Ldis;
+       4: iload_1
+       5: iconst_3
+       6: iconst_3
+       7: invokespecial #62                 // Method dhj."<init>":(Ldis;III)V
+      10: aload_0
+      11: aload_3
+      12: putfield      #64                 // Field y:Ldhw;
+      15: aload_0
+      16: aload_2
+      17: getfield      #69                 // Field ddl.j:Lddm;
+      20: putfield      #71                 // Field z:Lddm;
+      23: aload_0
+      24: aload_0
+      25: getfield      #71                 // Field z:Lddm;
+      28: bipush        124
+      30: bipush        35
+      32: invokevirtual #74                 // Method a:(Lddm;II)Ldji;
+      35: pop
+      36: aload_0
+      37: bipush        30
+      39: bipush        17
+      41: invokevirtual #78                 // Method d:(II)V
+      44: aload_0
+      45: aload_2
+      46: bipush        8
+      48: bipush        84
+      50: invokevirtual #82                 // Method c:(Lccv;II)V
+      53: return
+
+  protected static void a(dhi, axf, ddm, dib, djd, dqx<dqh>);
+    Code:
+       0: aload_3
+       1: invokeinterface #92,  1           // InterfaceMethod dib.aE_:()Ldqg;
+       6: astore        6
+       8: aload_2
+       9: checkcast     #94                 // class axg
+      12: astore        7
+      14: getstatic     #100                // Field dlt.l:Ldlt;
+      17: astore        8
+      19: aload_1
+      20: invokevirtual #105                // Method axf.s:()Lnet/minecraft/server/MinecraftServer;
+      23: invokevirtual #111                // Method net/minecraft/server/MinecraftServer.aJ:()Ldqz;
+      26: getstatic     #116                // Field drd.a:Ldrd;
+      29: aload         6
+      31: aload_1
+      32: aload         5
+      34: invokevirtual #121                // Method dqz.a:(Ldrd;Ldqy;Ldwo;Ldqx;)Ljava/util/Optional;
+      37: astore        9
+      39: aload         9
+      41: invokevirtual #127                // Method java/util/Optional.isPresent:()Z
+      44: ifeq          110
+      47: aload         9
+      49: invokevirtual #131                // Method java/util/Optional.get:()Ljava/lang/Object;
+      52: checkcast     #133                // class dqx
+      55: astore        10
+      57: aload         10
+      59: invokevirtual #137                // Method dqx.b:()Ldqs;
+      62: checkcast     #139                // class dqh
+      65: astore        11
+      67: aload         4
+      69: aload         7
+      71: aload         10
+      73: invokevirtual #144                // Method djd.a:(Laxg;Ldqx;)Z
+      76: ifeq          110
+      79: aload         11
+      81: aload         6
+      83: aload_1
+      84: invokevirtual #148                // Method axf.J_:()Ljr;
+      87: invokeinterface #151,  3          // InterfaceMethod dqh.a:(Ldqy;Ljf$a;)Ldlt;
+      92: astore        12
+      94: aload         12
+      96: aload_1
+      97: invokevirtual #155                // Method axf.Q:()Ldgz;
+     100: invokevirtual #158                // Method dlt.a:(Ldgz;)Z
+     103: ifeq          110
+     106: aload         12
+     108: astore        8
+     110: aload         4
+     112: iconst_0
+     113: aload         8
+     115: invokevirtual #163                // Method djd.a:(ILdlt;)V
+     118: aload_0
+     119: iconst_0
+     120: aload         8
+     122: invokevirtual #164                // Method dhi.a:(ILdlt;)V
+     125: aload         7
+     127: getfield      #168                // Field axg.g:Layi;
+     130: new           #170                // class adx
+     133: dup
+     134: aload_0
+     135: getfield      #172                // Field dhi.l:I
+     138: aload_0
+     139: invokevirtual #176                // Method dhi.k:()I
+     142: iconst_0
+     143: aload         8
+     145: invokespecial #179                // Method adx."<init>":(IIILdlt;)V
+     148: invokevirtual #184                // Method ayi.b:(Laay;)V
+     151: return
+
+  public void a(ccv);
+    Code:
+       0: aload_0
+       1: getfield      #208                // Field A:Z
+       4: ifne          22
+       7: aload_0
+       8: getfield      #64                 // Field y:Ldhw;
+      11: aload_0
+      12: invokedynamic #226,  0            // InvokeDynamic #0:accept:(Ldic;)Ljava/util/function/BiConsumer;
+      17: invokeinterface #229,  2          // InterfaceMethod dhw.a:(Ljava/util/function/BiConsumer;)V
+      22: return
+
+  public void l();
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: putfield      #208                // Field A:Z
+       5: return
+
+  public void a(axf, dqx<dqh>);
+    Code:
+       0: aload_0
+       1: iconst_0
+       2: putfield      #208                // Field A:Z
+       5: aload_0
+       6: aload_1
+       7: aload_0
+       8: getfield      #71                 // Field z:Lddm;
+      11: aload_0
+      12: getfield      #235                // Field m:Ldib;
+      15: aload_0
+      16: getfield      #238                // Field n:Ldjd;
+      19: aload_2
+      20: invokestatic  #240                // Method a:(Ldhi;Laxf;Lddm;Ldib;Ldjd;Ldqx;)V
+      23: return
+
+  public void a(ddm);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: invokespecial #243                // Method dhj.a:(Lddm;)V
+       5: aload_0
+       6: getfield      #64                 // Field y:Ldhw;
+       9: aload_0
+      10: aload_1
+      11: invokedynamic #250,  0            // InvokeDynamic #1:accept:(Ldic;Lddm;)Ljava/util/function/BiConsumer;
+      16: invokeinterface #229,  2          // InterfaceMethod dhw.a:(Ljava/util/function/BiConsumer;)V
+      21: return
+
+  public boolean b(ddm);
+    Code:
+       0: aload_0
+       1: getfield      #64                 // Field y:Ldhw;
+       4: aload_1
+       5: getstatic     #257                // Field dzs.cX:Ldzq;
+       8: invokestatic  #260                // Method a:(Ldhw;Lddm;Ldzq;)Z
+      11: ireturn
+
+  public dlt b(ddm, int);
+    Code:
+       0: getstatic     #100                // Field dlt.l:Ldlt;
+       3: astore_3
+       4: aload_0
+       5: getfield      #264                // Field k:Ljm;
+       8: iload_2
+       9: invokevirtual #269                // Method jm.get:(I)Ljava/lang/Object;
+      12: checkcast     #271                // class dji
+      15: astore        4
+      17: aload         4
+      19: ifnull        232
+      22: aload         4
+      24: invokevirtual #274                // Method dji.h:()Z
+      27: ifeq          232
+      30: aload         4
+      32: invokevirtual #277                // Method dji.g:()Ldlt;
+      35: astore        5
+      37: aload         5
+      39: invokevirtual #279                // Method dlt.v:()Ldlt;
+      42: astore_3
+      43: iload_2
+      44: ifne          87
+      47: aload         5
+      49: invokevirtual #282                // Method dlt.h:()Ldlp;
+      52: aload         5
+      54: aload_1
+      55: invokevirtual #287                // Method dlp.c:(Ldlt;Lddm;)V
+      58: aload_0
+      59: aload         5
+      61: bipush        10
+      63: bipush        46
+      65: iconst_1
+      66: invokevirtual #290                // Method a:(Ldlt;IIZ)Z
+      69: ifne          76
+      72: getstatic     #100                // Field dlt.l:Ldlt;
+      75: areturn
+      76: aload         4
+      78: aload         5
+      80: aload_3
+      81: invokevirtual #295                // Method dji.b:(Ldlt;Ldlt;)V
+      84: goto          172
+      87: iload_2
+      88: bipush        10
+      90: if_icmplt     154
+      93: iload_2
+      94: bipush        46
+      96: if_icmpge     154
+      99: aload_0
+     100: aload         5
+     102: iconst_1
+     103: bipush        10
+     105: iconst_0
+     106: invokevirtual #290                // Method a:(Ldlt;IIZ)Z
+     109: ifne          172
+     112: iload_2
+     113: bipush        37
+     115: if_icmpge     136
+     118: aload_0
+     119: aload         5
+     121: bipush        37
+     123: bipush        46
+     125: iconst_0
+     126: invokevirtual #290                // Method a:(Ldlt;IIZ)Z
+     129: ifne          172
+     132: getstatic     #100                // Field dlt.l:Ldlt;
+     135: areturn
+     136: aload_0
+     137: aload         5
+     139: bipush        10
+     141: bipush        37
+     143: iconst_0
+     144: invokevirtual #290                // Method a:(Ldlt;IIZ)Z
+     147: ifne          172
+     150: getstatic     #100                // Field dlt.l:Ldlt;
+     153: areturn
+     154: aload_0
+     155: aload         5
+     157: bipush        10
+     159: bipush        46
+     161: iconst_0
+     162: invokevirtual #290                // Method a:(Ldlt;IIZ)Z
+     165: ifne          172
+     168: getstatic     #100                // Field dlt.l:Ldlt;
+     171: areturn
+     172: aload         5
+     174: invokevirtual #298                // Method dlt.f:()Z
+     177: ifeq          191
+     180: aload         4
+     182: getstatic     #100                // Field dlt.l:Ldlt;
+     185: invokevirtual #302                // Method dji.e:(Ldlt;)V
+     188: goto          196
+     191: aload         4
+     193: invokevirtual #304                // Method dji.d:()V
+     196: aload         5
+     198: invokevirtual #307                // Method dlt.N:()I
+     201: aload_3
+     202: invokevirtual #307                // Method dlt.N:()I
+     205: if_icmpne     212
+     208: getstatic     #100                // Field dlt.l:Ldlt;
+     211: areturn
+     212: aload         4
+     214: aload_1
+     215: aload         5
+     217: invokevirtual #310                // Method dji.a:(Lddm;Ldlt;)V
+     220: iload_2
+     221: ifne          232
+     224: aload_1
+     225: aload         5
+     227: iconst_0
+     228: invokevirtual #313                // Method ddm.a:(Ldlt;Z)Lczl;
+     231: pop
+     232: aload_3
+     233: areturn
+
+  public boolean a(dlt, dji);
+    Code:
+       0: aload_2
+       1: getfield      #317                // Field dji.c:Lccv;
+       4: aload_0
+       5: getfield      #238                // Field n:Ldjd;
+       8: if_acmpeq     24
+      11: aload_0
+      12: aload_1
+      13: aload_2
+      14: invokespecial #319                // Method dhj.a:(Ldlt;Ldji;)Z
+      17: ifeq          24
+      20: iconst_1
+      21: goto          25
+      24: iconst_0
+      25: ireturn
+
+  public dji m();
+    Code:
+       0: aload_0
+       1: getfield      #264                // Field k:Ljm;
+       4: iconst_0
+       5: invokevirtual #269                // Method jm.get:(I)Ljava/lang/Object;
+       8: checkcast     #271                // class dji
+      11: areturn
+
+  public java.util.List<dji> n();
+    Code:
+       0: aload_0
+       1: getfield      #264                // Field k:Ljm;
+       4: iconst_1
+       5: bipush        10
+       7: invokevirtual #326                // Method jm.subList:(II)Ljava/util/List;
+      10: areturn
+
+  public dja ao_();
+    Code:
+       0: getstatic     #333                // Field dja.a:Ldja;
+       3: areturn
+
+  protected ddm q();
+    Code:
+       0: aload_0
+       1: getfield      #71                 // Field z:Lddm;
+       4: areturn
+
+  private void a(ddm, dwo, is);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_0
+       3: getfield      #235                // Field m:Ldib;
+       6: invokevirtual #337                // Method a:(Lddm;Lccv;)V
+       9: return
+
+  private void a(dwo, is);
+    Code:
+       0: aload_1
+       1: instanceof    #102                // class axf
+       4: ifeq          30
+       7: aload_1
+       8: checkcast     #102                // class axf
+      11: astore_3
+      12: aload_0
+      13: aload_3
+      14: aload_0
+      15: getfield      #71                 // Field z:Lddm;
+      18: aload_0
+      19: getfield      #235                // Field m:Ldib;
+      22: aload_0
+      23: getfield      #238                // Field n:Ldjd;
+      26: aconst_null
+      27: invokestatic  #240                // Method a:(Ldhi;Laxf;Lddm;Ldib;Ldjd;Ldqx;)V
+      30: return
+}

@@ -1,0 +1,81 @@
+c	amf	net/minecraft/class_2955	net/minecraft/recipe/InputSlotFiller
+	f	I	a	field_51523	field_51523
+	f	Lddl;	b	field_13350	inventory
+	f	Lamf$a;	c	field_13348	handler
+	f	Z	d	field_52340	craftAll
+	f	I	e	field_52341	width
+	f	I	f	field_52342	height
+	f	Ljava/util/List;	g	field_52343	inputSlots
+	f	Ljava/util/List;	h	field_52344	slotsToReturn
+	m	()V	a	method_12822	returnInputs
+	m	(ILjava/util/List;)I	a	method_65781	clampToMaxCount
+		p	1			entries
+		p	0			count
+	m	(IZ)I	a	method_61231	calculateCraftAmount
+		p	2			match
+		p	1			forCraftAll
+	m	(Lamf$a;IILjava/util/List;Ljava/util/List;Lddl;Ldqx;ZZ)Ldiz$a;	a	method_61232	fill
+		p	3			inputSlots
+		p	2			height
+		p	1			width
+		p	0			handler
+		p	7			craftAll
+		p	6			recipe
+		p	5			inventory
+		p	4			slotsToReturn
+		p	8			creative
+	m	(Ldji;Ljd;I)I	a	method_12824	fillInputSlot
+		p	1			slot
+		p	2			item
+		p	3			count
+	m	(Ldqx;Lddu;)Ldiz$a;	a	method_61233	tryFill
+		p	2			finder
+		p	1			recipe
+	m	(Ljava/util/List;ILjava/lang/Integer;III)V	a	method_65782	method_65782
+		p	3			slot
+		p	5			x
+		p	4			index
+		p	6			y
+	m	()Z	b	method_12825	canReturnInputs
+	m	(Ldqx;Lddu;)V	b	method_61235	fill
+		p	2			finder
+		p	1			recipe
+	m	()I	c	method_12823	getFreeInventorySlots
+	m	(Lamf$a;Lddl;ZIILjava/util/List;Ljava/util/List;)V	<init>	<init>	<init>
+		p	7			slotsToReturn
+		p	6			inputSlots
+		p	5			height
+		p	4			width
+		p	3			craftAll
+		p	2			inventory
+		p	1			handler
+c	amf$a	net/minecraft/class_2955$class_9840	net/minecraft/recipe/InputSlotFiller$Handler
+	m	()V	a	method_61236	clear
+	m	(Lddu;)V	a	method_61237	populateRecipeFinder
+		p	1			finder
+	m	(Ldqx;)Z	a	method_61238	matches
+		p	1			entry
+c	amg	net/minecraft/class_6323	net/minecraft/unused/packageinfo/PackageInfo6323
+c	amh	net/minecraft/class_8803	net/minecraft/block/BlockKeys
+	f	Lamt;	a	field_46221	PUMPKIN
+	f	Lamt;	b	field_46222	PUMPKIN_STEM
+	f	Lamt;	c	field_46223	ATTACHED_PUMPKIN_STEM
+	f	Lamt;	d	field_46224	MELON
+	f	Lamt;	e	field_46225	MELON_STEM
+	f	Lamt;	f	field_46226	ATTACHED_MELON_STEM
+	m	(Ljava/lang/String;)Lamt;	a	method_53910	of
+		p	0			id
+c	ami	net/minecraft/class_8804	net/minecraft/item/ItemKeys
+	f	Lamt;	a	field_46227	PUMPKIN_SEEDS
+	f	Lamt;	b	field_46228	MELON_SEEDS
+	m	(Ljava/lang/String;)Lamt;	a	method_53911	of
+		p	0			id
+c	amj	net/minecraft/class_10118	net/minecraft/unused/packageinfo/PackageInfo10118
+c	amk	net/minecraft/class_5379	net/minecraft/util/dynamic/ForwardingDynamicOps
+	c	A dynamic ops that delegates all operations from another one.
+	f	Lcom/mojang/serialization/DynamicOps;	a	field_25503	delegate
+	m	(Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;	getMapEntries	getMapEntries	getMapEntries
+		p	1			input
+	m	(Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;	mergeToPrimitive	mergeToPrimitive	mergeToPrimitive
+		p	2			value
+		p	1			prefix
