@@ -11,13 +11,11 @@ import java.util.List;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.ScreenRect;
-import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.screen.ingame.CraftingScreen;
-import net.minecraft.client.gui.screen.recipebook.CraftingRecipeBookWidget;
-import net.minecraft.client.gui.screen.ingame.RecipeBookScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.text.Text;
@@ -33,9 +31,10 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CraftingScreen.class)
-public abstract class CraftingScreenMixin extends RecipeBookScreen<CraftingScreenHandler> implements NearbyPanelAccess {
+public abstract class CraftingScreenMixin extends HandledScreen<CraftingScreenHandler> implements NearbyPanelAccess {
 	@Unique
 	private ButtonWidget derk$nearbyButton;
 
@@ -58,7 +57,7 @@ public abstract class CraftingScreenMixin extends RecipeBookScreen<CraftingScree
 	private long derk$lastClickTick = -1000L;
 
 	protected CraftingScreenMixin(CraftingScreenHandler handler, PlayerInventory inventory, Text title) {
-		super(handler, new CraftingRecipeBookWidget(handler), inventory, title);
+		super(handler, inventory, title);
 	}
 
 	@Inject(method = "init", at = @At("TAIL"))
@@ -151,7 +150,7 @@ public abstract class CraftingScreenMixin extends RecipeBookScreen<CraftingScree
 			NearbyItemEntry entry = entries.get(index);
 			context.drawItem(entry.stack(), itemX, itemY);
 			String count = derk$formatCount(entry.count());
-			context.drawStackOverlay(this.textRenderer, entry.stack(), itemX, itemY, count);
+			context.drawItemInSlot(this.textRenderer, entry.stack(), itemX, itemY, count);
 		}
 
 		int hoveredIndex = derk$getHoveredIndex(mouseX, mouseY, entries.size(), panelX, panelY);
@@ -163,13 +162,26 @@ public abstract class CraftingScreenMixin extends RecipeBookScreen<CraftingScree
 		derk$renderClickPulse(context, entries.size(), panelX, panelY);
 	}
 
+	@Inject(method = "charTyped", at = @At("HEAD"), cancellable = true)
+	private void derk$onCharTyped(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+		if (this.derk$handleCharTyped(chr, modifiers)) {
+			cir.setReturnValue(true);
+		}
+	}
+
+	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
+	private void derk$onKeyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+		if (this.derk$handleKeyPressed(keyCode, scanCode, modifiers)) {
+			cir.setReturnValue(true);
+		}
+	}
+
 	@Override
-	public boolean derk$handleMouseClick(Click click, boolean doubleClick) {
-		if (!this.derk$nearbyOpen || click.button() != 0) {
+	public boolean derk$handleMouseClick(double mouseX, double mouseY, int button) {
+		if (!this.derk$nearbyOpen || button != 0) {
 			return false;
 		}
-		double mouseX = click.x();
-		double mouseY = click.y();
+
 		int panelX = this.x + this.backgroundWidth + 6;
 		int panelY = this.y + 48;
 		int columns = 4;
@@ -193,7 +205,7 @@ public abstract class CraftingScreenMixin extends RecipeBookScreen<CraftingScree
 		this.derk$lastClickIndex = index;
 		this.derk$lastClickTick = MinecraftClient.getInstance().world == null ? 0L : MinecraftClient.getInstance().world.getTime();
 		SoundManager soundManager = MinecraftClient.getInstance().getSoundManager();
-		soundManager.play(net.minecraft.client.sound.PositionedSoundInstance.ui(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+		soundManager.play(net.minecraft.client.sound.PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
 		this.close();
 		return true;
 	}
@@ -280,11 +292,11 @@ public abstract class CraftingScreenMixin extends RecipeBookScreen<CraftingScree
 	}
 
 	@Override
-	public boolean derk$handleCharTyped(net.minecraft.client.input.CharInput input) {
+	public boolean derk$handleCharTyped(char chr, int modifiers) {
 		if (!this.derk$nearbyOpen) {
 			return false;
 		}
-		if (this.derk$searchField != null && this.derk$searchField.charTyped(input)) {
+		if (this.derk$searchField != null && this.derk$searchField.charTyped(chr, modifiers)) {
 			this.derk$scrollOffset = 0;
 			return true;
 		}
@@ -292,11 +304,11 @@ public abstract class CraftingScreenMixin extends RecipeBookScreen<CraftingScree
 	}
 
 	@Override
-	public boolean derk$handleKeyPressed(net.minecraft.client.input.KeyInput input) {
+	public boolean derk$handleKeyPressed(int keyCode, int scanCode, int modifiers) {
 		if (!this.derk$nearbyOpen) {
 			return false;
 		}
-		if (this.derk$searchField != null && this.derk$searchField.keyPressed(input)) {
+		if (this.derk$searchField != null && this.derk$searchField.keyPressed(keyCode, scanCode, modifiers)) {
 			this.derk$scrollOffset = 0;
 			return true;
 		}

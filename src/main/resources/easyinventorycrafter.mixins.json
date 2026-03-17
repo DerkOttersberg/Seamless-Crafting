@@ -15,7 +15,6 @@
     "AbstractCraftingScreenHandlerClientMixin",
     "CraftingScreenMixin",
     "InventoryScreenMixin",
-    "RecipeBookScreenMixin",
     "RecipeBookWidgetMixin"
   ],
   "injectors": {

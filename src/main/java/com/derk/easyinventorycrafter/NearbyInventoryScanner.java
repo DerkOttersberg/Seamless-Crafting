@@ -15,11 +15,10 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Item;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public final class NearbyInventoryScanner {
 	public static final int DEFAULT_RADIUS = 16;
@@ -67,7 +66,7 @@ public final class NearbyInventoryScanner {
 		for (Inventory inventory : inventories) {
 			for (int i = 0; i < inventory.size(); i++) {
 				ItemStack stack = inventory.getStack(i);
-				if (!stack.isEmpty() && PlayerInventory.usableWhenFillingSlot(stack)) {
+				if (!stack.isEmpty() && derk$isUsableWhenFillingSlot(stack)) {
 					totals.merge(stack.getItem(), stack.getCount(), Integer::sum);
 				}
 			}
@@ -93,7 +92,7 @@ public final class NearbyInventoryScanner {
 		for (Inventory inventory : inventories) {
 			for (int i = 0; i < inventory.size(); i++) {
 				ItemStack stack = inventory.getStack(i);
-				if (stack.isEmpty() || !PlayerInventory.usableWhenFillingSlot(stack)) {
+				if (stack.isEmpty() || !derk$isUsableWhenFillingSlot(stack)) {
 					continue;
 				}
 
@@ -134,7 +133,7 @@ public final class NearbyInventoryScanner {
 				ItemStack stack = inventory.getStack(i);
 				if (!stack.isEmpty()
 						&& stack.getItem() == item
-						&& PlayerInventory.usableWhenFillingSlot(stack)) {
+						&& derk$isUsableWhenFillingSlot(stack)) {
 					return pos.toImmutable();
 				}
 			}
@@ -190,10 +189,14 @@ public final class NearbyInventoryScanner {
 			ItemStack stack = inventory.getStack(i);
 			if (!stack.isEmpty()
 					&& stack.getItem() == item
-					&& PlayerInventory.usableWhenFillingSlot(stack)) {
+					&& derk$isUsableWhenFillingSlot(stack)) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	private static boolean derk$isUsableWhenFillingSlot(ItemStack stack) {
+		return !stack.isEmpty() && !stack.isDamaged();
 	}
 }

@@ -11,12 +11,12 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.InputSlotFiller;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.screen.AbstractCraftingScreenHandler;
+import net.minecraft.screen.AbstractRecipeScreenHandler;
+import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.world.World;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,16 +27,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(InputSlotFiller.class)
 public abstract class InputSlotFillerMixin {
 	@Shadow
-	private PlayerInventory inventory;
+	protected PlayerInventory inventory;
 
 	@Shadow
-	private InputSlotFiller.Handler<?> handler;
-
-	@Shadow
-	private boolean craftAll;
+	protected AbstractRecipeScreenHandler handler;
 
 	@Inject(method = "fillInputSlot", at = @At("HEAD"), cancellable = true)
-	private void derk$fillFromNearby(Slot slot, RegistryEntry<Item> item, int count, CallbackInfoReturnable<Integer> cir) {
+	private void derk$fillFromNearby(Slot slot, ItemStack item, int count, CallbackInfoReturnable<Integer> cir) {
 		int targetCount = count;
 		ItemStack slotStack = slot.getStack();
 		int availableInPlayer = this.derk$countInPlayerInventory(item, slotStack);
@@ -44,7 +41,7 @@ public abstract class InputSlotFillerMixin {
 			return;
 		}
 
-		AbstractCraftingScreenHandler screenHandler = this.derk$resolveScreenHandler();
+		CraftingScreenHandler screenHandler = this.derk$resolveScreenHandler();
 		if (screenHandler == null || !(screenHandler instanceof NearbyCraftingAccess access)) {
 			cir.setReturnValue(-1);
 			return;
@@ -84,7 +81,7 @@ public abstract class InputSlotFillerMixin {
 					continue;
 				}
 
-				if (!stack.itemMatches(item) || !PlayerInventory.usableWhenFillingSlot(stack)) {
+				if (!this.derk$matchesItem(stack, item) || !this.derk$isUsableWhenFillingSlot(stack)) {
 					continue;
 				}
 
@@ -122,13 +119,13 @@ public abstract class InputSlotFillerMixin {
 
 	@Inject(method = "returnInputs", at = @At("HEAD"))
 	private void derk$returnNearbyInputsToOrigin(CallbackInfo ci) {
-		AbstractCraftingScreenHandler screenHandler = this.derk$resolveScreenHandler();
+		CraftingScreenHandler screenHandler = this.derk$resolveScreenHandler();
 		if (screenHandler instanceof NearbyCraftingAccess access) {
 			access.derk$prepareNearbyWithdrawalsForAutofill();
 		}
 	}
 
-	private int derk$countInInventories(List<Inventory> inventories, RegistryEntry<Item> item, ItemStack slotStack) {
+	private int derk$countInInventories(List<Inventory> inventories, ItemStack item, ItemStack slotStack) {
 		int total = 0;
 		for (Inventory inv : inventories) {
 			for (int i = 0; i < inv.size(); i++) {
@@ -136,7 +133,7 @@ public abstract class InputSlotFillerMixin {
 				if (stack.isEmpty()) {
 					continue;
 				}
-				if (!stack.itemMatches(item) || !PlayerInventory.usableWhenFillingSlot(stack)) {
+				if (!this.derk$matchesItem(stack, item) || !this.derk$isUsableWhenFillingSlot(stack)) {
 					continue;
 				}
 				if (!slotStack.isEmpty() && !ItemStack.areItemsAndComponentsEqual(slotStack, stack)) {
@@ -151,13 +148,13 @@ public abstract class InputSlotFillerMixin {
 		return total;
 	}
 
-	private int derk$countInPlayerInventory(RegistryEntry<Item> item, ItemStack slotStack) {
+	private int derk$countInPlayerInventory(ItemStack item, ItemStack slotStack) {
 		int total = 0;
-		for (ItemStack stack : this.inventory.getMainStacks()) {
+		for (ItemStack stack : this.inventory.main) {
 			if (stack.isEmpty()) {
 				continue;
 			}
-			if (!stack.itemMatches(item) || !PlayerInventory.usableWhenFillingSlot(stack)) {
+			if (!this.derk$matchesItem(stack, item) || !this.derk$isUsableWhenFillingSlot(stack)) {
 				continue;
 			}
 			if (!slotStack.isEmpty() && !ItemStack.areItemsAndComponentsEqual(slotStack, stack)) {
@@ -168,14 +165,14 @@ public abstract class InputSlotFillerMixin {
 		return total;
 	}
 
-	private int derk$takeFromPlayerInventory(RegistryEntry<Item> item, ItemStack slotStack, Slot slot, int remaining) {
+	private int derk$takeFromPlayerInventory(ItemStack item, ItemStack slotStack, Slot slot, int remaining) {
 		int stillNeeded = remaining;
-		for (int i = 0; i < this.inventory.getMainStacks().size() && stillNeeded > 0; i++) {
+		for (int i = 0; i < this.inventory.main.size() && stillNeeded > 0; i++) {
 			ItemStack stack = this.inventory.getStack(i);
 			if (stack.isEmpty()) {
 				continue;
 			}
-			if (!stack.itemMatches(item) || !PlayerInventory.usableWhenFillingSlot(stack)) {
+			if (!this.derk$matchesItem(stack, item) || !this.derk$isUsableWhenFillingSlot(stack)) {
 				continue;
 			}
 			if (!slotStack.isEmpty() && !ItemStack.areItemsAndComponentsEqual(slotStack, stack)) {
@@ -203,8 +200,8 @@ public abstract class InputSlotFillerMixin {
 	}
 
 	@Nullable
-	private AbstractCraftingScreenHandler derk$resolveScreenHandler() {
-		if (this.handler instanceof AbstractCraftingScreenHandler screenHandler) {
+	private CraftingScreenHandler derk$resolveScreenHandler() {
+		if (this.handler instanceof CraftingScreenHandler screenHandler) {
 			return screenHandler;
 		}
 
@@ -214,10 +211,10 @@ public abstract class InputSlotFillerMixin {
 		}
 
 		for (Field field : handlerObj.getClass().getDeclaredFields()) {
-			if (AbstractCraftingScreenHandler.class.isAssignableFrom(field.getType())) {
+			if (CraftingScreenHandler.class.isAssignableFrom(field.getType())) {
 				field.setAccessible(true);
 				try {
-					return (AbstractCraftingScreenHandler)field.get(handlerObj);
+					return (CraftingScreenHandler)field.get(handlerObj);
 				} catch (IllegalAccessException ignored) {
 					return null;
 				}
@@ -227,13 +224,19 @@ public abstract class InputSlotFillerMixin {
 		return null;
 	}
 
-	private int derk$getCraftingSlotIndex(AbstractCraftingScreenHandler screenHandler, Slot slot) {
-		List<Slot> inputSlots = screenHandler.getInputSlots();
-		for (int i = 0; i < inputSlots.size(); i++) {
-			if (inputSlots.get(i) == slot) {
-				return i;
-			}
+	private int derk$getCraftingSlotIndex(CraftingScreenHandler screenHandler, Slot slot) {
+		int slotId = slot.id;
+		if (slotId <= 0 || slotId > screenHandler.getCraftingSlotCount()) {
+			return -1;
 		}
-		return -1;
+		return slotId - 1;
+	}
+
+	private boolean derk$matchesItem(ItemStack candidate, ItemStack expected) {
+		return ItemStack.areItemsEqual(candidate, expected);
+	}
+
+	private boolean derk$isUsableWhenFillingSlot(ItemStack stack) {
+		return !stack.isEmpty() && !stack.isDamaged();
 	}
 }

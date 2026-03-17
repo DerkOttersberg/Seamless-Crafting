@@ -20,7 +20,7 @@ public final class EasyHighlightRenderer {
 
     public static void renderBox(MatrixStack matrices, VertexConsumer consumer, Vec3d camPos, Box box, float alpha) {
         int highlightColor = EasyInventoryCrafterConfig.getHighlightColor();
-        int color = ColorHelper.getArgb(
+        int color = ColorHelper.Argb.getArgb(
                 (int)(alpha * EasyInventoryCrafterConfig.getHighlightOpacity() * 255),
                 (highlightColor >> 16) & 0xFF,
                 (highlightColor >> 8) & 0xFF,
@@ -57,8 +57,8 @@ public final class EasyHighlightRenderer {
         Matrix4f textMatrix = matrices.peek().getPositionMatrix();
         float x = -textRenderer.getWidth(label) / 2.0f;
         int highlightColor = EasyInventoryCrafterConfig.getHighlightColor();
-        int textColor = ColorHelper.getArgb((int) (alpha * 255), (highlightColor >> 16) & 0xFF, (highlightColor >> 8) & 0xFF, highlightColor & 0xFF);
-        int backgroundColor = ColorHelper.getArgb((int) (alpha * 0.35f * 255), 0, 0, 0);
+        int textColor = ColorHelper.Argb.getArgb((int) (alpha * 255), (highlightColor >> 16) & 0xFF, (highlightColor >> 8) & 0xFF, highlightColor & 0xFF);
+        int backgroundColor = ColorHelper.Argb.getArgb((int) (alpha * 0.35f * 255), 0, 0, 0);
         textRenderer.draw(
             label,
             x,

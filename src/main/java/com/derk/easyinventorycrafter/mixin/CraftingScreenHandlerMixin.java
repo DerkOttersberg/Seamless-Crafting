@@ -52,7 +52,7 @@ public abstract class CraftingScreenHandlerMixin implements NearbyCraftingAccess
 	private PlayerEntity player;
 
 	@Shadow
-	public abstract List<Slot> getInputSlots();
+	public abstract int getCraftingSlotCount();
 
 	@Shadow
 	public abstract void onContentChanged(Inventory inventory);
@@ -113,7 +113,7 @@ public abstract class CraftingScreenHandlerMixin implements NearbyCraftingAccess
 	}
 
 	@Inject(method = "onInputSlotFillFinish", at = @At("TAIL"))
-	private void derk$refreshAfterFill(ServerWorld world, net.minecraft.recipe.RecipeEntry<net.minecraft.recipe.CraftingRecipe> recipe, CallbackInfo ci) {
+	private void derk$refreshAfterFill(net.minecraft.recipe.RecipeEntry<net.minecraft.recipe.CraftingRecipe> recipe, CallbackInfo ci) {
 		this.derk$autofillingNearbyWithdrawals = false;
 		this.derk$reconcileNearbyWithdrawals();
 		if (this.player instanceof ServerPlayerEntity serverPlayer) {
@@ -135,7 +135,7 @@ public abstract class CraftingScreenHandlerMixin implements NearbyCraftingAccess
 
 		this.derk$reconcilingNearbyWithdrawals = true;
 		try {
-			List<Slot> inputSlots = this.getInputSlots();
+			List<Slot> inputSlots = this.derk$getInputSlots();
 			Map<Integer, Integer> cancelableCounts = new HashMap<>();
 			for (Integer slotIndex : this.derk$slotBaselineCounts.keySet()) {
 				if (slotIndex < 0 || slotIndex >= inputSlots.size()) {
@@ -195,7 +195,7 @@ public abstract class CraftingScreenHandlerMixin implements NearbyCraftingAccess
 					break;
 				}
 
-				List<Slot> inputSlots = this.getInputSlots();
+				List<Slot> inputSlots = this.derk$getInputSlots();
 				boolean passChanged = false;
 				for (Iterator<PendingNearbyWithdrawal> iterator = this.derk$pendingNearbyWithdrawals.iterator(); iterator.hasNext(); ) {
 					PendingNearbyWithdrawal withdrawal = iterator.next();
@@ -297,6 +297,20 @@ public abstract class CraftingScreenHandlerMixin implements NearbyCraftingAccess
 		targetStack.increment(inserted);
 		stack.decrement(inserted);
 		return inserted;
+	}
+
+	@Unique
+	private List<Slot> derk$getInputSlots() {
+		int count = this.getCraftingSlotCount();
+		if (count <= 0) {
+			return java.util.Collections.emptyList();
+		}
+
+		List<Slot> inputSlots = new ArrayList<>(count);
+		for (int i = 1; i <= count; i++) {
+			inputSlots.add(((CraftingScreenHandler)(Object)this).getSlot(i));
+		}
+		return inputSlots;
 	}
 
 	@Unique

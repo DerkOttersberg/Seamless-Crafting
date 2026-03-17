@@ -8,11 +8,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.screen.ingame.RecipeBookScreen;
-import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.sound.SoundManager;
@@ -29,9 +27,10 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(InventoryScreen.class)
-public abstract class InventoryScreenMixin extends RecipeBookScreen<PlayerScreenHandler> implements NearbyPanelAccess {
+public abstract class InventoryScreenMixin extends HandledScreen<PlayerScreenHandler> implements NearbyPanelAccess {
 	@Unique
 	private ButtonWidget derk$nearbyButton;
 
@@ -44,8 +43,8 @@ public abstract class InventoryScreenMixin extends RecipeBookScreen<PlayerScreen
 	@Unique
 	private boolean derk$nearbyOpen = true;
 
-	protected InventoryScreenMixin(PlayerScreenHandler handler, RecipeBookWidget<?> recipeBook, PlayerInventory inventory, Text title) {
-		super(handler, recipeBook, inventory, title);
+	protected InventoryScreenMixin(PlayerScreenHandler handler, PlayerInventory inventory, Text title) {
+		super(handler, inventory, title);
 	}
 
 	@Inject(method = "init", at = @At("TAIL"))
@@ -128,7 +127,7 @@ public abstract class InventoryScreenMixin extends RecipeBookScreen<PlayerScreen
 			int itemY = startY + row * slotSize + 1;
 			NearbyItemEntry entry = entries.get(index);
 			context.drawItem(entry.stack(), itemX, itemY);
-			context.drawStackOverlay(this.textRenderer, entry.stack(), itemX, itemY, this.derk$formatCount(entry.count()));
+			context.drawItemInSlot(this.textRenderer, entry.stack(), itemX, itemY, this.derk$formatCount(entry.count()));
 		}
 
 		int hoveredIndex = this.derk$getHoveredIndex(mouseX, mouseY, entries.size(), panelX, panelY);
@@ -138,14 +137,28 @@ public abstract class InventoryScreenMixin extends RecipeBookScreen<PlayerScreen
 		}
 	}
 
+	@Inject(method = "charTyped", at = @At("HEAD"), cancellable = true)
+	private void derk$onCharTyped(char chr, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+		if (this.derk$handleCharTyped(chr, modifiers)) {
+			cir.setReturnValue(true);
+		}
+	}
+
+	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
+	private void derk$onKeyPressed(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+		if (this.derk$handleKeyPressed(keyCode, scanCode, modifiers)) {
+			cir.setReturnValue(true);
+		}
+	}
+
+
+
 	@Override
-	public boolean derk$handleMouseClick(Click click, boolean doubleClick) {
-		if (!this.derk$nearbyOpen || click.button() != 0) {
+	public boolean derk$handleMouseClick(double mouseX, double mouseY, int button) {
+		if (!this.derk$nearbyOpen || button != 0) {
 			return false;
 		}
 
-		double mouseX = click.x();
-		double mouseY = click.y();
 		int panelX = this.x + this.backgroundWidth + 6;
 		int panelY = this.y + 48;
 		int columns = 4;
@@ -170,7 +183,7 @@ public abstract class InventoryScreenMixin extends RecipeBookScreen<PlayerScreen
 		NearbyItemEntry entry = entries.get(index);
 		NearbyItemsClientState.requestHighlightAndAim(entry.stack());
 		SoundManager soundManager = MinecraftClient.getInstance().getSoundManager();
-		soundManager.play(net.minecraft.client.sound.PositionedSoundInstance.ui(SoundEvents.UI_BUTTON_CLICK, 1.0f));
+		soundManager.play(net.minecraft.client.sound.PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f));
 		this.close();
 		return true;
 	}
@@ -196,11 +209,11 @@ public abstract class InventoryScreenMixin extends RecipeBookScreen<PlayerScreen
 	}
 
 	@Override
-	public boolean derk$handleCharTyped(net.minecraft.client.input.CharInput input) {
+	public boolean derk$handleCharTyped(char chr, int modifiers) {
 		if (!this.derk$nearbyOpen) {
 			return false;
 		}
-		if (this.derk$searchField != null && this.derk$searchField.charTyped(input)) {
+		if (this.derk$searchField != null && this.derk$searchField.charTyped(chr, modifiers)) {
 			this.derk$scrollOffset = 0;
 			return true;
 		}
@@ -208,11 +221,11 @@ public abstract class InventoryScreenMixin extends RecipeBookScreen<PlayerScreen
 	}
 
 	@Override
-	public boolean derk$handleKeyPressed(net.minecraft.client.input.KeyInput input) {
+	public boolean derk$handleKeyPressed(int keyCode, int scanCode, int modifiers) {
 		if (!this.derk$nearbyOpen) {
 			return false;
 		}
-		if (this.derk$searchField != null && this.derk$searchField.keyPressed(input)) {
+		if (this.derk$searchField != null && this.derk$searchField.keyPressed(keyCode, scanCode, modifiers)) {
 			this.derk$scrollOffset = 0;
 			return true;
 		}

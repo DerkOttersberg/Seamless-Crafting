@@ -7,8 +7,8 @@ import com.derk.easyinventorycrafter.NearbyInventoryScanner.WorldPos;
 import java.util.List;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.RecipeFinder;
-import net.minecraft.screen.AbstractCraftingScreenHandler;
+import net.minecraft.recipe.RecipeMatcher;
+import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.inventory.RecipeInputInventory;
 import org.spongepowered.asm.mixin.Final;
@@ -18,19 +18,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(AbstractCraftingScreenHandler.class)
+@Mixin(CraftingScreenHandler.class)
 public class AbstractCraftingScreenHandlerMixin implements AbstractCraftingScreenHandlerAccess {
 	@Shadow
 	@Final
-	protected RecipeInputInventory craftingInventory;
+	private RecipeInputInventory input;
 
 	@Override
 	public RecipeInputInventory derk$getCraftingInventory() {
-		return this.craftingInventory;
+		return this.input;
 	}
 
 	@Inject(method = "populateRecipeFinder", at = @At("TAIL"))
-	private void derk$addNearbyItems(RecipeFinder finder, CallbackInfo ci) {
+	private void derk$addNearbyItems(RecipeMatcher finder, CallbackInfo ci) {
 		if (!((Object)this instanceof NearbyCraftingAccess access)) {
 			return;
 		}
@@ -52,7 +52,9 @@ public class AbstractCraftingScreenHandlerMixin implements AbstractCraftingScree
 		for (Inventory inventory : inventories) {
 			for (int i = 0; i < inventory.size(); i++) {
 				ItemStack stack = inventory.getStack(i);
-				finder.addInputIfUsable(stack);
+				if (!stack.isEmpty()) {
+					finder.addInput(stack);
+				}
 			}
 		}
 	}

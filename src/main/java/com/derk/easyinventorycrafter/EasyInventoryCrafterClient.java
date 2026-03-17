@@ -7,21 +7,21 @@ import com.derk.easyinventorycrafter.net.NearbyHighlightResponsePayload;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.CraftingScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.render.RenderLayers;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class EasyInventoryCrafterClient implements ClientModInitializer {
 	@Override
@@ -56,7 +56,7 @@ public class EasyInventoryCrafterClient implements ClientModInitializer {
 			}
 		});
 
-		WorldRenderEvents.BEFORE_TRANSLUCENT.register(context -> {
+		WorldRenderEvents.AFTER_TRANSLUCENT.register(context -> {
 			if (!NearbyItemsClientState.hasHighlight()) {
 				return;
 			}
@@ -67,15 +67,14 @@ public class EasyInventoryCrafterClient implements ClientModInitializer {
 			}
 
 			PlayerEntity player = client.player;
-			Vec3d cameraPos = client.gameRenderer.getCamera().getCameraPos();
+			Vec3d cameraPos = client.gameRenderer.getCamera().getPos();
 			float alpha = NearbyItemsClientState.getHighlightAlpha();
 
-			var matrices = context.matrices();
+			var matrices = context.matrixStack();
 			matrices.push();
 
-			var consumer = context.consumers().getBuffer(RenderLayers.lightning());
-
 			for (BlockPos pos : NearbyItemsClientState.getHighlightPositions()) {
+				var consumer = context.consumers().getBuffer(RenderLayer.getLightning());
 				Box fullBox = renderHighlightedBlock(client, matrices, consumer, cameraPos, pos, alpha);
 				if (fullBox == null) {
 					continue;
