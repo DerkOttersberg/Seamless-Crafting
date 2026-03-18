@@ -4,12 +4,14 @@ plugins {
 }
 
 def targetJavaVersion = 21
+def artifactName = "${project.archives_base_name}-${project.minecraft_version}"
 
 version = project.mod_version
 group = project.maven_group
+def resourceVersion = version.toString()
 
 base {
-	archivesName = "${project.archives_base_name}-${project.minecraft_version}"
+	archivesName = artifactName
 }
 
 repositories {
@@ -26,7 +28,7 @@ repositories {
 loom {
 	mixin {
 		useLegacyMixinAp = true
-		defaultRefmapName = "derk_easy_inventory_crafter.refmap.json"
+		defaultRefmapName = "seamless_crafting.refmap.json"
 	}
 }
 
@@ -47,10 +49,10 @@ dependencies {
 }
 
 processResources {
-	inputs.property "version", project.version
+	inputs.property "version", resourceVersion
 
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+		expand "version": resourceVersion
 	}
 }
 
@@ -74,7 +76,7 @@ java {
 
 jar {
 	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
+		rename { "${it}_${artifactName}"}
 	}
 }
 
@@ -100,3 +102,4 @@ publishing {
 		// retrieving dependencies.
 	}
 }
+

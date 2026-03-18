@@ -1,33 +1,34 @@
 {
   "schemaVersion": 1,
-  "id": "derk_easy_inventory_crafter",
+  "id": "seamless_crafting",
   "version": "${version}",
 
-  "name": "Bluethooth Chest",
+  "name": "Seamless Crafting",
   "description": "Craft straight from nearby chests with a clean nearby-items panel, recipe book support, and chest highlighting.",
-  "icon": "icon.png",
+  "icon": "assets/seamless_crafting/icon.png",
   "authors": [
-    "Derk"
+    "Derk Ottersberg"
   ],
   "contact": {
-    "sources": ""
+    "issues": "https://github.com/DerkOttersberg/Seamless-Crafting/issues",
+    "sources": "https://github.com/DerkOttersberg/Seamless-Crafting"
   },
 
   "license": "CC0-1.0",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.derk.easyinventorycrafter.EasyInventoryCrafterMod"
+      "com.derk.seamlesscrafting.SeamlessCraftingMod"
     ],
     "client": [
-      "com.derk.easyinventorycrafter.EasyInventoryCrafterClient"
+      "com.derk.seamlesscrafting.SeamlessCraftingClient"
 	],
 	"modmenu": [
-	  "com.derk.easyinventorycrafter.client.EasyInventoryCrafterModMenu"
+	  "com.derk.seamlesscrafting.client.SeamlessCraftingModMenu"
     ]
   },
   "mixins": [
-    "easyinventorycrafter.mixins.json"
+    "seamlesscrafting.mixins.json"
   ],
 
   "depends": {
@@ -39,3 +40,4 @@
 	"modmenu": "*"
   }
 }
+

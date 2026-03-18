@@ -1,6 +1,6 @@
-# Bluethooth Chest
+# Seamless Crafting
 
-Bluethooth Chest lets the vanilla crafting table use items stored in nearby chests.
+Seamless Crafting lets the vanilla crafting table use items stored in nearby chests.
 
 ## What the mod does
 
@@ -51,3 +51,4 @@ If Mod Menu is installed, the mod exposes a config screen with:
 2. Open a world.
 3. Place a crafting table near one or more chests.
 4. Open the crafting table and test nearby crafting, recipe book updates, chest highlighting, and the nearby panel.
+

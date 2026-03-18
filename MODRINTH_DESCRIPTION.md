@@ -1,6 +1,6 @@
-# Bluethooth Chest
+# Seamless Crafting
 
-Bluethooth Chest lets you craft with items stored in nearby chests and other nearby inventories instead of moving every ingredient into your player inventory first.
+Seamless Crafting lets you craft with items stored in nearby chests and other nearby inventories instead of moving every ingredient into your player inventory first.
 
 Open a crafting table or your inventory recipe book, and the mod will scan nearby storage, count available ingredients, and update recipe availability to match what you can actually craft.
 
@@ -63,8 +63,8 @@ On singleplayer, your local config controls the scan radius. On a dedicated serv
 
 If you find a bug, please open an issue on GitHub:
 
-- Issues: https://github.com/DerkOttersberg/bluethooth-chest/issues
-- Source: https://github.com/DerkOttersberg/bluethooth-chest
+- Issues: https://github.com/DerkOttersberg/seamless-crafting/issues
+- Source: https://github.com/DerkOttersberg/seamless-crafting
 
 Bug reports are much easier to fix if you include:
 
@@ -77,4 +77,4 @@ Bug reports are much easier to fix if you include:
 
 ## Why Use It
 
-Bluethooth Chest keeps crafting fast and vanilla-friendly. You still use the normal crafting UI, but the ingredients around you finally matter.
+Seamless Crafting keeps crafting fast and vanilla-friendly. You still use the normal crafting UI, but the ingredients around you finally matter.
