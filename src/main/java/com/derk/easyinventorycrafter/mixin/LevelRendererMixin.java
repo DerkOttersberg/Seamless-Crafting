@@ -285,17 +285,28 @@ public class LevelRendererMixin {
         float textX = -font.width(text) / 2.0f;
         int textAlpha = Math.max(64, Math.min(255, (int) (alpha * 255.0f)));
         int textColor = ARGB.color(textAlpha, 255, 255, 255);
-        int outlineColor = ARGB.color(textAlpha, 0, 0, 0);
+        int backgroundColor = ARGB.color(Math.max(48, textAlpha / 2), 0, 0, 0);
         double labelX = pos.getX() + 0.5;
         double labelZ = pos.getZ() + 0.5;
-        float yawDegrees = (float) Math.toDegrees(Math.atan2(eyePos.x - labelX, eyePos.z - labelZ));
+        float yawDegrees = (float) Math.toDegrees(Math.atan2(eyePos.x - labelX, eyePos.z - labelZ)) + 180.0f;
 
         poseStack.pushPose();
         poseStack.translate(dx + 0.5, dy + DISTANCE_LABEL_HEIGHT, dz + 0.5);
         poseStack.mulPose(Axis.YP.rotationDegrees(yawDegrees));
         poseStack.scale(-0.025f, -0.025f, 0.025f);
         Matrix4f matrix = poseStack.last().pose();
-        font.drawInBatch8xOutline(Component.literal(text).getVisualOrderText(), textX, 0.0f, textColor, outlineColor, matrix, bufferSource, 15728880);
+        font.drawInBatch(
+            Component.literal(text).getVisualOrderText(),
+            textX,
+            0.0f,
+            textColor,
+            false,
+            matrix,
+            bufferSource,
+            Font.DisplayMode.SEE_THROUGH,
+            backgroundColor,
+            15728880
+        );
         poseStack.popPose();
     }
 }
