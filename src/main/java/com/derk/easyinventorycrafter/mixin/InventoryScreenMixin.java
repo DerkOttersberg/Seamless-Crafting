@@ -99,7 +99,7 @@ public abstract class InventoryScreenMixin extends AbstractRecipeBookScreen<Inve
         int slotSize = 21;
         int panelWidth = columns * slotSize + 6;
         int panelHeight = rows * slotSize + 16;
-        guiGraphics.fill(panelX, panelY, panelX + panelWidth, panelY + panelHeight, 0x88000000);
+        guiGraphics.fill(panelX, panelY, panelX + panelWidth, panelY + panelHeight, derk$withPanelOpacity(0x88000000));
         guiGraphics.drawString(this.font, Component.literal("Nearby"), panelX + 4, panelY + 4, 0xFFFFFF, true);
 
         int startX = panelX + 3;
@@ -113,12 +113,12 @@ public abstract class InventoryScreenMixin extends AbstractRecipeBookScreen<Inve
             for (int col = 0; col < columns; col++) {
                 int slotX = startX + col * slotSize;
                 int slotY = startY + row * slotSize;
-                guiGraphics.fill(slotX, slotY, slotX + 18, slotY + 18, 0x55000000);
-                guiGraphics.fill(slotX + 1, slotY + 1, slotX + 17, slotY + 17, 0x2A000000);
-                guiGraphics.fill(slotX, slotY, slotX + 18, slotY + 1, 0x66FFFFFF);
-                guiGraphics.fill(slotX, slotY, slotX + 1, slotY + 18, 0x66FFFFFF);
-                guiGraphics.fill(slotX, slotY + 17, slotX + 18, slotY + 18, 0x33000000);
-                guiGraphics.fill(slotX + 17, slotY, slotX + 18, slotY + 18, 0x33000000);
+                guiGraphics.fill(slotX, slotY, slotX + 18, slotY + 18, derk$withPanelOpacity(0x55000000));
+                guiGraphics.fill(slotX + 1, slotY + 1, slotX + 17, slotY + 17, derk$withPanelOpacity(0x2A000000));
+                guiGraphics.fill(slotX, slotY, slotX + 18, slotY + 1, derk$withPanelOpacity(0x66FFFFFF));
+                guiGraphics.fill(slotX, slotY, slotX + 1, slotY + 18, derk$withPanelOpacity(0x66FFFFFF));
+                guiGraphics.fill(slotX, slotY + 17, slotX + 18, slotY + 18, derk$withPanelOpacity(0x33000000));
+                guiGraphics.fill(slotX + 17, slotY, slotX + 18, slotY + 18, derk$withPanelOpacity(0x33000000));
             }
         }
 
@@ -139,6 +139,13 @@ public abstract class InventoryScreenMixin extends AbstractRecipeBookScreen<Inve
         if (hoveredIndex >= 0) {
             this.renderTooltip(guiGraphics, mouseX, mouseY);
         }
+    }
+
+    @Unique
+    private static int derk$withPanelOpacity(int color) {
+        int alpha = (color >>> 24) & 0xFF;
+        int scaledAlpha = Math.max(0, Math.min(255, Math.round(alpha * EasyInventoryCrafterConfig.getNearbyPanelOpacity())));
+        return (scaledAlpha << 24) | (color & 0x00FFFFFF);
     }
 
     @Override

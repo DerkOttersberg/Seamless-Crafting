@@ -95,6 +95,10 @@ public final class EasyInventoryCrafterConfig {
         return data.autoRefreshTicks;
     }
 
+    public static float getNearbyPanelOpacity() {
+        return data.nearbyPanelOpacityPercent / 100.0f;
+    }
+
     private static ConfigData sanitize(ConfigData source) {
         ConfigData sanitized = source == null ? ConfigData.defaults() : source.copy();
         sanitized.showLocateTrail = sanitized.resolveLocateTrail();
@@ -106,6 +110,7 @@ public final class EasyInventoryCrafterConfig {
         sanitized.highlightDurationTicks = clamp(sanitized.highlightDurationTicks, 10, 20 * 60);
         sanitized.nearbyRadius = clamp(sanitized.nearbyRadius, 1, 64);
         sanitized.highlightOpacityPercent = clamp(sanitized.highlightOpacityPercent, 5, 100);
+        sanitized.nearbyPanelOpacityPercent = clamp(sanitized.nearbyPanelOpacityPercent, 5, 100);
         sanitized.autoRefreshTicks = clamp(sanitized.autoRefreshTicks, 5, 20 * 30);
         return sanitized;
     }
@@ -123,6 +128,7 @@ public final class EasyInventoryCrafterConfig {
         public int highlightDurationTicks;
         public int nearbyRadius;
         public int highlightOpacityPercent;
+        public int nearbyPanelOpacityPercent;
         public boolean showHighlighter;
         public boolean showDistanceLabel;
         public boolean snapAimToChest;
@@ -138,6 +144,7 @@ public final class EasyInventoryCrafterConfig {
             defaults.highlightDurationTicks = 100;
             defaults.nearbyRadius = 16;
             defaults.highlightOpacityPercent = 35;
+            defaults.nearbyPanelOpacityPercent = 75;
             defaults.showHighlighter = true;
             defaults.showDistanceLabel = true;
             defaults.snapAimToChest = false;
@@ -165,6 +172,7 @@ public final class EasyInventoryCrafterConfig {
             copy.highlightDurationTicks = highlightDurationTicks;
             copy.nearbyRadius = nearbyRadius;
             copy.highlightOpacityPercent = highlightOpacityPercent;
+            copy.nearbyPanelOpacityPercent = nearbyPanelOpacityPercent;
             copy.showHighlighter = showHighlighter;
             copy.showDistanceLabel = showDistanceLabel;
             copy.snapAimToChest = snapAimToChest;

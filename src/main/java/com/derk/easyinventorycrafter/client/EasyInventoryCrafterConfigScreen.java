@@ -16,6 +16,7 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
     private EditBox highlightDurationField;
     private EditBox nearbyRadiusField;
     private EditBox highlightOpacityField;
+    private EditBox nearbyPanelOpacityField;
     private EditBox autoRefreshField;
     private Button highlightColorPickerButton;
     private boolean showHighlighter;
@@ -59,13 +60,14 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
         this.derk$addLabel(labelX, startY + row, labelW, "Highlight Duration");
         this.derk$addLabel(labelX, startY + row * 2, labelW, "Nearby Distance");
         this.derk$addLabel(labelX, startY + row * 3, labelW, "Highlight Opacity");
-        this.derk$addLabel(labelX, startY + row * 4, labelW, "Auto Refresh");
-        this.derk$addLabel(labelX, startY + row * 5, labelW, "Chest Highlighter");
-        this.derk$addLabel(labelX, startY + row * 6, labelW, "Distance Label");
-        this.derk$addLabel(labelX, startY + row * 7, labelW, "Snap Aim To Chest");
-        this.derk$addLabel(labelX, startY + row * 8, labelW, "Locate Trail");
-        this.derk$addLabel(labelX, startY + row * 9, labelW, "Trail Particle");
-        this.derk$addLabel(labelX, startY + row * 10, labelW, "Panel Default");
+        this.derk$addLabel(labelX, startY + row * 4, labelW, "Nearby Panel Opacity");
+        this.derk$addLabel(labelX, startY + row * 5, labelW, "Auto Refresh");
+        this.derk$addLabel(labelX, startY + row * 6, labelW, "Chest Highlighter");
+        this.derk$addLabel(labelX, startY + row * 7, labelW, "Distance Label");
+        this.derk$addLabel(labelX, startY + row * 8, labelW, "Snap Aim To Chest");
+        this.derk$addLabel(labelX, startY + row * 9, labelW, "Locate Trail");
+        this.derk$addLabel(labelX, startY + row * 10, labelW, "Trail Particle");
+        this.derk$addLabel(labelX, startY + row * 11, labelW, "Panel Default");
 
         this.highlightColorField = this.derk$addField(fieldX, startY, fieldW, String.format(Locale.ROOT, "#%06X", config.highlightColor));
         this.highlightColorPickerButton = this.addRenderableWidget(Button.builder(Component.literal("Pick"), btn ->
@@ -78,37 +80,38 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
         this.highlightDurationField = this.derk$addField(fieldX, startY + row, fieldW, this.derk$formatSeconds(config.highlightDurationTicks));
         this.nearbyRadiusField = this.derk$addField(fieldX, startY + row * 2, fieldW, Integer.toString(config.nearbyRadius));
         this.highlightOpacityField = this.derk$addField(fieldX, startY + row * 3, fieldW, Integer.toString(config.highlightOpacityPercent));
-        this.autoRefreshField = this.derk$addField(fieldX, startY + row * 4, fieldW, this.derk$formatSeconds(config.autoRefreshTicks));
+        this.nearbyPanelOpacityField = this.derk$addField(fieldX, startY + row * 4, fieldW, Integer.toString(config.nearbyPanelOpacityPercent));
+        this.autoRefreshField = this.derk$addField(fieldX, startY + row * 5, fieldW, this.derk$formatSeconds(config.autoRefreshTicks));
 
         this.highlightEnabledButton = this.addRenderableWidget(Button.builder(this.derk$onOff(this.showHighlighter), btn -> {
             this.showHighlighter = !this.showHighlighter;
             btn.setMessage(this.derk$onOff(this.showHighlighter));
-        }).bounds(fieldX, startY + row * 5, 96, 20).build());
+        }).bounds(fieldX, startY + row * 6, 96, 20).build());
 
         this.showDistanceLabelButton = this.addRenderableWidget(Button.builder(this.derk$onOff(this.showDistanceLabel), btn -> {
             this.showDistanceLabel = !this.showDistanceLabel;
             btn.setMessage(this.derk$onOff(this.showDistanceLabel));
-        }).bounds(fieldX, startY + row * 6, 96, 20).build());
+        }).bounds(fieldX, startY + row * 7, 96, 20).build());
 
         this.snapAimButton = this.addRenderableWidget(Button.builder(this.derk$onOff(this.snapAimToChest), btn -> {
             this.snapAimToChest = !this.snapAimToChest;
             btn.setMessage(this.derk$onOff(this.snapAimToChest));
-        }).bounds(fieldX, startY + row * 7, 96, 20).build());
+        }).bounds(fieldX, startY + row * 8, 96, 20).build());
 
         this.locateTrailButton = this.addRenderableWidget(Button.builder(this.derk$onOff(this.showLocateTrail), btn -> {
             this.showLocateTrail = !this.showLocateTrail;
             btn.setMessage(this.derk$onOff(this.showLocateTrail));
-        }).bounds(fieldX, startY + row * 8, 96, 20).build());
+        }).bounds(fieldX, startY + row * 9, 96, 20).build());
 
         this.trailParticleButton = this.addRenderableWidget(Button.builder(Component.literal(this.locateTrailParticle.getLabel()), btn -> {
             this.locateTrailParticle = this.locateTrailParticle.next();
             btn.setMessage(Component.literal(this.locateTrailParticle.getLabel()));
-        }).bounds(fieldX, startY + row * 9, 132, 20).build());
+        }).bounds(fieldX, startY + row * 10, 132, 20).build());
 
         this.panelDefaultButton = this.addRenderableWidget(Button.builder(this.derk$openClosed(this.nearbyPanelOpenByDefault), btn -> {
             this.nearbyPanelOpenByDefault = !this.nearbyPanelOpenByDefault;
             btn.setMessage(this.derk$openClosed(this.nearbyPanelOpenByDefault));
-        }).bounds(fieldX, startY + row * 10, 96, 20).build());
+        }).bounds(fieldX, startY + row * 11, 96, 20).build());
 
         this.addRenderableWidget(Button.builder(Component.literal("Reset Defaults"), btn -> this.derk$resetToDefaults()).bounds(centerX - 155, this.height - 52, 100, 20).build());
         this.addRenderableWidget(Button.builder(Component.literal("Cancel"), btn -> this.onClose()).bounds(centerX - 50, this.height - 52, 100, 20).build());
@@ -126,8 +129,8 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
         int cx = this.width / 2;
         int panelX = cx - 190;
         int panelY = 34;
-        g.fill(panelX, panelY, panelX + 380, panelY + 430, 0xAA191C22);
-        derk$drawBorder(g, panelX, panelY, 380, 430, 0xFF404652);
+        g.fill(panelX, panelY, panelX + 380, panelY + 464, 0xAA191C22);
+        derk$drawBorder(g, panelX, panelY, 380, 464, 0xFF404652);
         g.drawCenteredString(this.font, this.title, cx, 18, 0xFFFFFF);
         if (!this.errorText.getString().isEmpty()) {
             g.drawCenteredString(this.font, this.errorText, cx, this.height - 78, 0xFF6B6B);
@@ -140,13 +143,14 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
         g.drawString(this.font, Component.literal("How long chest highlights stay visible."), labelX, startY + row + 24, 0xB9C0CB, true);
         g.drawString(this.font, Component.literal("Search radius around the crafting table."), labelX, startY + row * 2 + 24, 0xB9C0CB, true);
         g.drawString(this.font, Component.literal("Opacity of the filled highlight overlay."), labelX, startY + row * 3 + 24, 0xB9C0CB, true);
-        g.drawString(this.font, Component.literal("How often the nearby list refreshes."), labelX, startY + row * 4 + 24, 0xB9C0CB, true);
-        g.drawString(this.font, Component.literal("Turn world chest highlighting on or off."), labelX, startY + row * 5 + 24, 0xB9C0CB, true);
-        g.drawString(this.font, Component.literal("Show floating distance text above highlights."), labelX, startY + row * 6 + 24, 0xB9C0CB, true);
-        g.drawString(this.font, Component.literal("Rotate camera toward nearest matching chest."), labelX, startY + row * 7 + 24, 0xB9C0CB, true);
-        g.drawString(this.font, Component.literal("Show a trail leading to the located chest."), labelX, startY + row * 8 + 24, 0xB9C0CB, true);
-        g.drawString(this.font, Component.literal("Particle type for the locate-trail effect."), labelX, startY + row * 9 + 24, 0xB9C0CB, true);
-        g.drawString(this.font, Component.literal("Whether the nearby panel starts opened."), labelX, startY + row * 10 + 24, 0xB9C0CB, true);
+        g.drawString(this.font, Component.literal("Opacity of the nearby items panel."), labelX, startY + row * 4 + 24, 0xB9C0CB, true);
+        g.drawString(this.font, Component.literal("How often the nearby list refreshes."), labelX, startY + row * 5 + 24, 0xB9C0CB, true);
+        g.drawString(this.font, Component.literal("Turn world chest highlighting on or off."), labelX, startY + row * 6 + 24, 0xB9C0CB, true);
+        g.drawString(this.font, Component.literal("Show floating distance text above highlights."), labelX, startY + row * 7 + 24, 0xB9C0CB, true);
+        g.drawString(this.font, Component.literal("Rotate camera toward nearest matching chest."), labelX, startY + row * 8 + 24, 0xB9C0CB, true);
+        g.drawString(this.font, Component.literal("Show a trail leading to the located chest."), labelX, startY + row * 9 + 24, 0xB9C0CB, true);
+        g.drawString(this.font, Component.literal("Particle type for the locate-trail effect."), labelX, startY + row * 10 + 24, 0xB9C0CB, true);
+        g.drawString(this.font, Component.literal("Whether the nearby panel starts opened."), labelX, startY + row * 11 + 24, 0xB9C0CB, true);
 
         try {
             int previewColor = this.derk$parseHexColor(this.highlightColorField.getValue());
@@ -176,6 +180,7 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
         this.highlightDurationField.setValue(this.derk$formatSeconds(d.highlightDurationTicks));
         this.nearbyRadiusField.setValue(Integer.toString(d.nearbyRadius));
         this.highlightOpacityField.setValue(Integer.toString(d.highlightOpacityPercent));
+        this.nearbyPanelOpacityField.setValue(Integer.toString(d.nearbyPanelOpacityPercent));
         this.autoRefreshField.setValue(this.derk$formatSeconds(d.autoRefreshTicks));
         this.showHighlighter = d.showHighlighter;
         this.showDistanceLabel = d.showDistanceLabel;
@@ -199,6 +204,7 @@ public class EasyInventoryCrafterConfigScreen extends Screen {
             u.highlightDurationTicks = this.derk$parseSecondsToTicks(this.highlightDurationField.getValue(), 0.5, 60.0);
             u.nearbyRadius = this.derk$parseInt(this.nearbyRadiusField.getValue(), 1, 64, "Nearby radius");
             u.highlightOpacityPercent = this.derk$parseInt(this.highlightOpacityField.getValue(), 5, 100, "Highlight opacity");
+            u.nearbyPanelOpacityPercent = this.derk$parseInt(this.nearbyPanelOpacityField.getValue(), 5, 100, "Nearby panel opacity");
             u.autoRefreshTicks = this.derk$parseSecondsToTicks(this.autoRefreshField.getValue(), 0.25, 30.0);
             u.showHighlighter = this.showHighlighter;
             u.showDistanceLabel = this.showDistanceLabel;
