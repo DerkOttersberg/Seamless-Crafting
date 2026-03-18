@@ -3,12 +3,12 @@ package com.derk.easyinventorycrafter.mixin;
 import com.derk.easyinventorycrafter.EasyInventoryCrafterConfig;
 import com.derk.easyinventorycrafter.client.NearbyItemsClientState;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import java.util.List;
 import java.util.Locale;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.LevelRenderState;
 import net.minecraft.core.BlockPos;
@@ -26,6 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(net.minecraft.client.renderer.LevelRenderer.class)
 public class LevelRendererMixin {
+    private static final float HIGHLIGHT_FACE_OFFSET = 0.003f;
 
     @Inject(
         method = "renderBlockOutline(Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lcom/mojang/blaze3d/vertex/PoseStack;ZLnet/minecraft/client/renderer/state/LevelRenderState;)V",
@@ -65,9 +66,8 @@ public class LevelRendererMixin {
         int argb = ARGB.color(a, r, g, b);
 
         Vec3 camPos = renderState.cameraRenderState.pos;
-        float lineWidth = mc.getWindow().getAppropriateLineWidth() * 2.5f;
 
-        var consumer = bufferSource.getBuffer(RenderTypes.lines());
+        VertexConsumer consumer = bufferSource.getBuffer(RenderTypes.debugQuads());
         for (BlockPos pos : positions) {
             if (mc.level.isOutsideBuildHeight(pos)) {
                 continue;
@@ -84,9 +84,21 @@ public class LevelRendererMixin {
             double dx = pos.getX() - camPos.x;
             double dy = pos.getY() - camPos.y;
             double dz = pos.getZ() - camPos.z;
-            ShapeRenderer.renderShape(poseStack, consumer, shape, dx, dy, dz, argb, lineWidth);
+            shape.forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) ->
+                derk$renderFilledBoxFaces(
+                    poseStack,
+                    consumer,
+                    (float) (dx + minX),
+                    (float) (dy + minY),
+                    (float) (dz + minZ),
+                    (float) (dx + maxX),
+                    (float) (dy + maxY),
+                    (float) (dz + maxZ),
+                    argb
+                )
+            );
         }
-        bufferSource.endBatch(RenderTypes.lines());
+        bufferSource.endBatch(RenderTypes.debugQuads());
 
         if (EasyInventoryCrafterConfig.isDistanceLabelEnabled() && mc.player != null) {
             for (BlockPos pos : positions) {
@@ -104,6 +116,153 @@ public class LevelRendererMixin {
                 derk$renderDistanceLabel(mc, bufferSource, poseStack, renderState, pos, dx, dy, dz, alpha);
             }
         }
+    }
+
+    private static void derk$renderFilledBoxFaces(
+        PoseStack poseStack,
+        VertexConsumer consumer,
+        float minX,
+        float minY,
+        float minZ,
+        float maxX,
+        float maxY,
+        float maxZ,
+        int color
+    ) {
+        Matrix4f matrix = poseStack.last().pose();
+
+        float minXOffset = minX - HIGHLIGHT_FACE_OFFSET;
+        float minYOffset = minY - HIGHLIGHT_FACE_OFFSET;
+        float minZOffset = minZ - HIGHLIGHT_FACE_OFFSET;
+        float maxXOffset = maxX + HIGHLIGHT_FACE_OFFSET;
+        float maxYOffset = maxY + HIGHLIGHT_FACE_OFFSET;
+        float maxZOffset = maxZ + HIGHLIGHT_FACE_OFFSET;
+
+        derk$addQuad(
+            consumer,
+            matrix,
+            minXOffset,
+            minY,
+            minZOffset,
+            maxXOffset,
+            minY,
+            minZOffset,
+            maxXOffset,
+            maxY,
+            minZOffset,
+            minXOffset,
+            maxY,
+            minZOffset,
+            color
+        );
+        derk$addQuad(
+            consumer,
+            matrix,
+            maxXOffset,
+            minY,
+            maxZOffset,
+            minXOffset,
+            minY,
+            maxZOffset,
+            minXOffset,
+            maxY,
+            maxZOffset,
+            maxXOffset,
+            maxY,
+            maxZOffset,
+            color
+        );
+        derk$addQuad(
+            consumer,
+            matrix,
+            minXOffset,
+            minY,
+            maxZOffset,
+            minXOffset,
+            minY,
+            minZOffset,
+            minXOffset,
+            maxY,
+            minZOffset,
+            minXOffset,
+            maxY,
+            maxZOffset,
+            color
+        );
+        derk$addQuad(
+            consumer,
+            matrix,
+            maxXOffset,
+            minY,
+            minZOffset,
+            maxXOffset,
+            minY,
+            maxZOffset,
+            maxXOffset,
+            maxY,
+            maxZOffset,
+            maxXOffset,
+            maxY,
+            minZOffset,
+            color
+        );
+        derk$addQuad(
+            consumer,
+            matrix,
+            minX,
+            maxYOffset,
+            minZ,
+            maxX,
+            maxYOffset,
+            minZ,
+            maxX,
+            maxYOffset,
+            maxZ,
+            minX,
+            maxYOffset,
+            maxZ,
+            color
+        );
+        derk$addQuad(
+            consumer,
+            matrix,
+            minX,
+            minYOffset,
+            maxZ,
+            maxX,
+            minYOffset,
+            maxZ,
+            maxX,
+            minYOffset,
+            minZ,
+            minX,
+            minYOffset,
+            minZ,
+            color
+        );
+    }
+
+    private static void derk$addQuad(
+        VertexConsumer consumer,
+        Matrix4f matrix,
+        float x1,
+        float y1,
+        float z1,
+        float x2,
+        float y2,
+        float z2,
+        float x3,
+        float y3,
+        float z3,
+        float x4,
+        float y4,
+        float z4,
+        int color
+    ) {
+        consumer.addVertex(matrix, x1, y1, z1).setColor(color);
+        consumer.addVertex(matrix, x2, y2, z2).setColor(color);
+        consumer.addVertex(matrix, x3, y3, z3).setColor(color);
+        consumer.addVertex(matrix, x4, y4, z4).setColor(color);
     }
 
     private static void derk$renderDistanceLabel(

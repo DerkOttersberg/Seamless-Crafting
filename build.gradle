@@ -17,6 +17,10 @@ base {
     archivesName = project.archives_base_name
 }
 
+tasks.named('jar', Jar).configure {
+    archiveFileName = "seamless crafting ${project.mod_version}.jar"
+}
+
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 sourceSets.main.resources {
